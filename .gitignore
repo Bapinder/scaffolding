@@ -1,0 +1,5 @@
+# The crew's real data — client names, addresses, signatures.
+# Never belongs in a public repository.
+live-state-backup.json
+*-state-backup.json
+scaffold-tracker-*.json

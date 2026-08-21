@@ -1,0 +1,161 @@
+<title>Scaffolding Software Landscape</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#f1f3f5; --panel:#fff; --panel-2:#f7f9fa; --ink:#151c22; --ink-2:#57646f;
+  --line:#e2e6eb; --line-2:#eef1f4;
+  --accent:#1f5d84; --accent-ink:#fff;
+  --have:#1a8a4a; --have-bg:#e6f6ec;
+  --gap:#b26a00; --gap-bg:#fff4e0;
+  --none:#57646f; --none-bg:#eef1f4;
+  --sans:"Barlow",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --cond:"Barlow Condensed","Barlow",-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e1116; --panel:#161b22; --panel-2:#1b2129; --ink:#e8ecf1; --ink-2:#9aa5b3;
+  --line:#252c36; --line-2:#1f262e; --accent:#7fc1e8; --accent-ink:#0b1620;
+  --have:#4ed08a; --have-bg:#12291d; --gap:#f0b45c; --gap-bg:#2a2113; --none:#9aa5b3; --none-bg:#20262e;
+}}
+:root[data-theme="dark"]{
+  --bg:#0e1116; --panel:#161b22; --panel-2:#1b2129; --ink:#e8ecf1; --ink-2:#9aa5b3;
+  --line:#252c36; --line-2:#1f262e; --accent:#7fc1e8; --accent-ink:#0b1620;
+  --have:#4ed08a; --have-bg:#12291d; --gap:#f0b45c; --gap-bg:#2a2113; --none:#9aa5b3; --none-bg:#20262e;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5}
+.page{max-width:900px;margin:0 auto;padding:44px 20px 80px;display:flex;flex-direction:column;gap:34px}
+h1{font-family:var(--cond);font-size:44px;font-weight:700;letter-spacing:-.01em;margin:0;text-wrap:balance;line-height:1.05}
+h2{font-family:var(--cond);font-size:27px;font-weight:700;margin:0;text-wrap:balance}
+h3{font-family:var(--cond);font-size:20px;font-weight:700;margin:0}
+p{margin:0;max-width:66ch}
+.eyebrow{font-family:var(--cond);font-size:14px;letter-spacing:.11em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.lede{font-size:18px;color:var(--ink-2);max-width:62ch}
+section{display:flex;flex-direction:column;gap:14px}
+.camp-hd{display:flex;align-items:baseline;gap:12px;border-bottom:2px solid var(--accent);padding-bottom:8px}
+.camp-n{font-family:var(--mono);font-size:14px;color:var(--accent)}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{width:100%;border-collapse:collapse;font-size:14.5px;min-width:560px}
+th{font-family:var(--cond);text-align:left;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);padding:11px 14px;border-bottom:1px solid var(--line);background:var(--panel-2)}
+td{padding:12px 14px;border-bottom:1px solid var(--line-2);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td.name{font-weight:600;white-space:nowrap}
+td.price{font-family:var(--mono);font-size:13px;color:var(--ink-2);white-space:nowrap;font-variant-numeric:tabular-nums}
+.note{font-size:14.5px;color:var(--ink-2);font-style:italic}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:720px){.cols{grid-template-columns:1fr}h1{font-size:34px}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:10px}
+.panel.gap{border-left:4px solid var(--gap)}
+.panel.wedge{border-left:4px solid var(--have)}
+ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:7px;font-size:15px}
+li strong{font-weight:600}
+ol.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;counter-reset:s}
+ol.steps li{counter-increment:s;display:grid;grid-template-columns:34px 1fr;gap:12px;padding:11px 0;border-bottom:1px solid var(--line-2)}
+ol.steps li::before{content:counter(s);font-family:var(--mono);font-size:13px;color:var(--accent);padding-top:2px}
+ol.steps li:last-child{border-bottom:0}
+.chip{display:inline-block;font-family:var(--cond);font-size:12.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:2px 9px;border-radius:999px}
+.chip.have{background:var(--have-bg);color:var(--have)}
+.chip.gap{background:var(--gap-bg);color:var(--gap)}
+footer{font-size:14px;color:var(--ink-2);border-top:1px solid var(--line);padding-top:16px}
+</style>
+
+<div class="page">
+<header style="display:flex;flex-direction:column;gap:12px">
+  <span class="eyebrow">Market review · 20 August 2026</span>
+  <h1>What the other scaffolding apps offer</h1>
+  <p class="lede">Twenty products, four camps, and almost nobody sitting in more than two of them. Read against our own tracker: what they have that we don't, and the few things none of them do.</p>
+</header>
+
+<section>
+  <div class="camp-hd"><span class="camp-n">01</span><h2>Design &amp; estimating</h2></div>
+  <p class="note">Draw it, count it, quote it. No job tracking, no sign-off, no calendar — these are drawing tools.</p>
+  <div class="scroll"><table>
+    <tr><th>Product</th><th>What you get</th><th>Price</th></tr>
+    <tr><td class="name">Scaffcalc</td><td>Browser 3D design, structural and FEM load calculations, automatic bill of materials, PDF proposals. Tiers from Quotation to Engineering; unlimited users from Pro</td><td class="price">quote</td></tr>
+    <tr><td class="name">ScaffPlan</td><td>Automated 3D in SketchUp or Tekla, gear lists, Trimble Connect collaboration</td><td class="price">£2,600–£3,550<br>/user/yr</td></tr>
+    <tr><td class="name">Scaffmax</td><td>SketchUp plugin — draw the surface, it places the scaffold around it</td><td class="price">not published</td></tr>
+    <tr><td class="name">NTI Scaffplanner</td><td>Revit/BIM plugin, instant material lists, transport weights</td><td class="price">custom</td></tr>
+    <tr><td class="name">LayPLAN</td><td>Layher-system erectors: 2D assembly sketches, 3D viewer</td><td class="price">via myLayher</td></tr>
+    <tr><td class="name">iScaf 11</td><td>Plan, elevation and 3D drawings with automatic component counting</td><td class="price">contact sales</td></tr>
+  </table></div>
+</section>
+
+<section>
+  <div class="camp-hd"><span class="camp-n">02</span><h2>Full ERP — yard, rental, invoicing</h2></div>
+  <p class="note">Where the money and the complexity are. Built for firms with yards full of stock.</p>
+  <div class="scroll"><table>
+    <tr><th>Product</th><th>What you get</th><th>Price</th></tr>
+    <tr><td class="name">Avontus Quantify</td><td>Serialized and non-serialized inventory, equipment forecasting, multi-project and multi-branch visibility, estimating by piece/weight/unit rate, automated invoicing (advance, arrears, FATA, off-rent and continuation periods), credit-hold rules, QuickBooks/Xero/Sage API, mobile equipment requests, QR scanning, interactive site maps, inspections</td><td class="price">$199–$349<br>/28 days<br>+ setup</td></tr>
+    <tr><td class="name">iQuote / iRent</td><td>Quote CRM with unlimited project stages and hire, labour, transport and sundries budgets; multi-yard inventory, delivery and return dockets, utilisation reporting, cross-hire, inter-yard transfers; progress-claim invoicing by area and stage, day labour, variations</td><td class="price">contact sales</td></tr>
+    <tr><td class="name">CloudScaff</td><td>Inventory (levels, movements, multi-yard, bulk operations, orders), site management (scaffold register, geolocation, site instructions, tasks), customer portal, forms and e-signing, chat, notifications, QR, reporting, accounting integrations, unlimited users</td><td class="price">free trial,<br>then quote</td></tr>
+  </table></div>
+</section>
+
+<section>
+  <div class="camp-hd"><span class="camp-n">03</span><h2>Compliance first — inspections, handovers, certificates</h2></div>
+  <p class="note">The camp closest to what we've built — and the one to learn the most from.</p>
+  <div class="scroll"><table>
+    <tr><th>Product</th><th>What you get</th></tr>
+    <tr><td class="name">SMART Scaffolder</td><td>Five modules: Estimator (take-offs, quotes), Manager (projects, workforce, <strong>variations and extra hire</strong>), Inspector (mobile inspections, defect tracking, scheduling, audit trail), Handover (digital certs with <strong>electronic signatures</strong>), Compliance (TG20:21 checks, drawings). Field apps record build and dismantle progress with notes, photos, audio and video. Xero, Sage, QuickBooks, BIM/Revit imports</td></tr>
+    <tr><td class="name">Footprint WFM</td><td>Handover certificates, weekly inspections, harness and lanyard checks, dismantle notices, timesheets. Offline mobile, geo-tagged and timestamped submissions, automatic document delivery to the customer, custom forms with 50+ field types, live KPI dashboards</td></tr>
+    <tr><td class="name">Scafflinq</td><td>QR scafftags on every scaffold, inspection app, built-in handover certificates</td></tr>
+    <tr><td class="name">Brand Inspection Manager</td><td>Full lifecycle — handover, inspection, off-hire, decommission — with documents shared to the customer</td></tr>
+    <tr><td class="name">Doka Hi-Vis / CORE EHS</td><td>Client side, not contractor side: electronic scaffold requests, permits to erect, modify and dismantle, tagging, live site view</td></tr>
+  </table></div>
+</section>
+
+<section>
+  <div class="camp-hd"><span class="camp-n">04</span><h2>Generic trade job managers</h2></div>
+  <p>What a lot of scaffolders actually run on. <strong>Tradify</strong> £34–£44 per user per month, <strong>Joblogic</strong> from £45 per licence per month, plus ServiceM8, Simpro, Commusoft, Fergus and BigChange. Quoting, scheduling, invoicing and payments are solid — but there is no scaffold vocabulary at all: no up/down state, no inspection clock, no handover certificate, no verification.</p>
+</section>
+
+<section>
+  <div class="camp-hd"><h2>Read against our tracker</h2></div>
+  <div class="cols">
+    <div class="panel gap">
+      <span class="chip gap">What they have, we don't</span>
+      <ul>
+        <li><strong>Quote → job → invoice</strong> as one chain. The main reason firms pay for any of these.</li>
+        <li><strong>Variations and extra hire</strong> on the job — named explicitly by SMART and iRent, and the most under-billed thing in the trade.</li>
+        <li><strong>Timesheets per job</strong> — without hours you see revenue, never margin.</li>
+        <li><strong>Defect tracking</strong> on a failed inspection, with a rectify-by date.</li>
+        <li><strong>E-signature</strong> on the handover certificate.</li>
+        <li><strong>Customer portal</strong> and automatic document delivery.</li>
+        <li><strong>Stock and dockets</strong> — multi-yard counts, delivery and return.</li>
+        <li><strong>Offline mobile</strong> with geo-tag and timestamp.</li>
+        <li><strong>Accounting integration</strong> — Xero, Sage, QuickBooks.</li>
+      </ul>
+    </div>
+    <div class="panel wedge">
+      <span class="chip have">What none of them do</span>
+      <ul>
+        <li><strong>Two-person verification</strong> with the doer blocked from signing off their own work. Others record who did it; they don't require a second name.</li>
+        <li><strong>Questions threaded on the job.</strong> Not present in any product reviewed — this lives on WhatsApp everywhere.</li>
+        <li><strong>Hire money live on the card</strong> — days up × weekly rate, visible while it accrues.</li>
+        <li><strong>No accounts.</strong> One link, pick your name. Everything above needs user provisioning first.</li>
+        <li><strong>No licence cost.</strong> Five people on Tradify is about £2,000 a year; on Joblogic about £2,700.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="camp-hd"><h2>Build order from here</h2></div>
+  <p class="note">Photos and QR tags parked for now. Ranked by money recovered per day of build.</p>
+  <ol class="steps">
+    <li><div><strong>Variations &amp; extra hire</strong> on a job — what changed, price, date, who approved it. Recovers real money for a day's work.</div></li>
+    <li><div><strong>Quote → job.</strong> Line items for erect price, weekly hire and adaptations; printable quote; "accepted" turns it into a booked job, completion produces an invoice summary.</div></li>
+    <li><div><strong>Timesheets on tasks</strong> — hours per person per job, against job value, giving margin per job.</div></li>
+    <li><div><strong>Inspection defects</strong> — fail an inspection, record the defect and a rectify-by date, which becomes its own task.</div></li>
+    <li><div><strong>Off-hire chase list</strong> — scaffolds standing past their planned dismantle, with a ready-to-send client message.</div></li>
+    <li><div><strong>Client pack</strong> — printable handover plus inspection history for the main contractor.</div></li>
+    <li><div><strong>Weekly print pack</strong> — what's up, what's due, what's overdue, one page for the Monday meeting.</div></li>
+    <li><div><strong>CSV export shaped for Xero or QuickBooks</strong>, instead of a full integration.</div></li>
+    <li><div><strong>Rough materials count per job</strong> — tube, board, fittings, and a yard total. The cheap 80% of inventory.</div></li>
+  </ol>
+</section>
+
+<footer>Sources: vendor feature and pricing pages for Avontus, SMART Scaffolder, CloudScaff, Footprint WFM, Scaffolding Software (iScaf/iQuote/iRent), Scaffcalc, ScaffPlan, Scafflinq and Brand Access Solutions, plus 2026 UK job-management comparisons. Prices as published August 2026; most vendors quote on request.</footer>
+</div>
