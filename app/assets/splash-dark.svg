@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2732 2732" width="2732" height="2732">
+  <rect width="2732" height="2732" fill="#0d1218"/>
+  <g transform="translate(1366 1366) scale(0.60) translate(-512 -512)">
+  <g stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <!-- bracing sits behind the tubes, slightly thinner and knocked back -->
+    <g stroke-width="40" opacity="0.5">
+      <path d="M304 512 L720 216"/>
+      <path d="M304 808 L720 512"/>
+    </g>
+    <!-- standards -->
+    <g stroke-width="54">
+      <path d="M304 168 V856"/>
+      <path d="M720 168 V856"/>
+      <!-- ledgers -->
+      <path d="M304 216 H720"/>
+      <path d="M304 512 H720"/>
+      <path d="M304 808 H720"/>
+    </g>
+  </g>
+
+  </g>
+</svg>

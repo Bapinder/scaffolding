@@ -1,0 +1,7 @@
+
+# build artifacts
+dist/
+node_modules/
+ios/App/Pods/
+android/app/build/
+android/.gradle/

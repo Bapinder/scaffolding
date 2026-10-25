@@ -1,0 +1,98 @@
+/* ---------------------------------------------------------------------------
+   Sync transport.
+
+   The web version of this app kept everyone in step by republishing its own HTML
+   through the Claude artifact runtime. There is no such thing on a phone, so this
+   file puts a real server behind the same idea: one JSON document per firm, fetched
+   and written whole, with compare-and-swap so two phones cannot clobber each other.
+
+   The app's own mergeStates() still does the reconciling — that logic was always
+   transport-agnostic, and none of it changed. All that is replaced is the pipe.
+   --------------------------------------------------------------------------- */
+"use strict";
+(function(){
+
+const LS_CODE = 'scaffold-tracker-code';
+const url = () => (window.SUPABASE_URL||'').replace(/\/+$/,'');
+const key = () => window.SUPABASE_ANON_KEY||'';
+
+function err(code, message){ const e = new Error(message||code); e.code = code; return e; }
+
+async function rpc(fn, body){
+  if(!url() || !key()) throw err('not_configured','No server configured');
+  let r;
+  try{
+    r = await fetch(url()+'/rest/v1/rpc/'+fn, {
+      method:'POST',
+      headers:{ 'apikey':key(), 'Authorization':'Bearer '+key(),
+                'Content-Type':'application/json', 'Accept':'application/json' },
+      body: JSON.stringify(body||{})
+    });
+  }catch(e){ throw err('offline','No signal'); }
+
+  if(r.status === 413) throw err('too_large','Too big to save');
+  if(r.status === 429) throw err('rate_limited','Too many saves');
+  if(!r.ok){
+    let detail = '';
+    try{ detail = (await r.json()).message || ''; }catch(e){}
+    if(/no_such_tracker/.test(detail)) throw err('no_such_tracker','That code does not match a tracker');
+    if(/too_large/.test(detail)) throw err('too_large','Too big to save');
+    if(r.status >= 500) throw err('server','The server is having trouble');
+    throw err('http_'+r.status, detail || ('Request failed ('+r.status+')'));
+  }
+  return r.json();
+}
+
+const one = rows => Array.isArray(rows) ? rows[0] : rows;
+
+const Backend = {
+  configured: () => !!(url() && key()),
+  code(){ try{ return localStorage.getItem(LS_CODE)||''; }catch(e){ return ''; } },
+  setCode(c){ try{ c ? localStorage.setItem(LS_CODE,c) : localStorage.removeItem(LS_CODE); }catch(e){} },
+  joined(){ return !!(Backend.configured() && Backend.code()); },
+
+  /* Start a new tracker on the server; returns the code the rest of the crew types. */
+  async create(company){
+    const row = one(await rpc('tracker_create',{ p_company: company||'' }));
+    if(!row || !row.join_code) throw err('server','Could not start a tracker');
+    Backend.setCode(row.join_code);
+    return row.join_code;
+  },
+
+  /* Attach this phone to an existing tracker. Throws no_such_tracker if the code is wrong. */
+  async join(code){
+    const c = String(code||'').trim().toUpperCase();
+    if(!c) throw err('no_such_tracker','Enter a code');
+    await rpc('tracker_get',{ p_code:c });   /* proves it exists before we keep it */
+    Backend.setCode(c);
+    return c;
+  },
+
+  leave(){ Backend.setCode(''); },
+
+  /* -> {state, rev} — state may be null for a tracker nobody has written yet. */
+  async load(){
+    const row = one(await rpc('tracker_get',{ p_code: Backend.code() }));
+    if(!row) throw err('no_such_tracker','That code does not match a tracker');
+    return { state: row.state, rev: Number(row.rev) };
+  },
+
+  /* Cheap "has anything changed?" — one number, not the whole document with its photos. */
+  async rev(){
+    const v = await rpc('tracker_rev',{ p_code: Backend.code() });
+    return Number(Array.isArray(v) ? v[0] : v);
+  },
+
+  /* Compare-and-swap. ok:false hands back what is actually on the server so the
+     caller can merge and try again. */
+  async save(state, rev){
+    const row = one(await rpc('tracker_put',{
+      p_code: Backend.code(), p_state: state, p_rev: rev
+    }));
+    if(!row) throw err('server','Save went nowhere');
+    return { ok: !!row.ok, state: row.state, rev: Number(row.rev) };
+  }
+};
+
+window.Backend = Backend;
+})();

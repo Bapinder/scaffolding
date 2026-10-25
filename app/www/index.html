@@ -1,0 +1,2144 @@
+<meta charset="utf-8">
+<!-- viewport-fit=cover lets the app paint under the notch; the safe-area rules below keep
+     content out from under it. Zoom is deliberately left enabled: a man on site wants to
+     pinch into the site photo, and disabling it fails accessibility review. -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#1d4667">
+<meta name="format-detection" content="telephone=yes">
+<title>My Scaffolding Ltd</title>
+<link rel="stylesheet" href="fonts.css">
+<style>
+/* Three colours do all the work: the brand colour, green for up, red for late. */
+:root{
+  --bg:#f2f4f6; --panel:#ffffff; --panel-2:#f7f9fb; --ink:#131a21; --ink-2:#5d6b78;
+  --line:#e0e5ea; --line-2:#edf0f3;
+  --accent:#1d4667; --accent-ink:#ffffff;
+  --up:#0f7a48; --up-bg:#e6f4ec;
+  --late:#a5271f; --late-bg:#fbeae8;
+  --shadow:0 1px 2px rgba(19,26,33,.05),0 8px 22px rgba(19,26,33,.06);
+  --sans:"Barlow",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --cond:"Barlow Condensed","Barlow",-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0d1218; --panel:#161d25; --panel-2:#1b232c; --ink:#e6ecf2; --ink-2:#94a3b2;
+  --line:#242e39; --line-2:#1e2731;
+  --accent:#8fbde6; --accent-ink:#0a141d;
+  --up:#48c98a; --up-bg:#102a1e;
+  --late:#f0817a; --late-bg:#2c1615;
+  --shadow:0 1px 2px rgba(0,0,0,.45),0 8px 22px rgba(0,0,0,.35);
+}}
+:root[data-theme="dark"]{
+  --bg:#0d1218; --panel:#161d25; --panel-2:#1b232c; --ink:#e6ecf2; --ink-2:#94a3b2;
+  --line:#242e39; --line-2:#1e2731;
+  --accent:#8fbde6; --accent-ink:#0a141d;
+  --up:#48c98a; --up-bg:#102a1e;
+  --late:#f0817a; --late-bg:#2c1615;
+  --shadow:0 1px 2px rgba(0,0,0,.45),0 8px 22px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.45;-webkit-text-size-adjust:100%}
+h1,h2,h3{margin:0;font-family:var(--cond);font-weight:700;letter-spacing:.01em;text-wrap:balance}
+h2{font-size:26px} h3{font-size:19px}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.wrap{max-width:900px;margin:0 auto;padding:18px 16px 90px}
+
+header.top{position:sticky;top:0;z-index:40;background:var(--panel);border-bottom:1px solid var(--line)}
+.top-in{max-width:900px;margin:0 auto;padding:9px 16px;display:flex;gap:10px;align-items:center}
+.brand{font-family:var(--cond);font-size:19px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
+nav.tabs{display:flex;gap:2px}
+nav.tabs button{background:none;border:0;padding:7px 13px;border-radius:8px;color:var(--ink-2);cursor:pointer;font-weight:600;font-size:15px}
+nav.tabs button:hover{background:var(--panel-2);color:var(--ink)}
+nav.tabs button[aria-current="true"]{background:var(--accent);color:var(--accent-ink)}
+.icon-btn{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:var(--panel-2);cursor:pointer;display:grid;place-items:center;padding:0;flex:none}
+.icon-btn.colour{background:var(--accent);border-color:transparent}
+.saving-chip{font-size:12.5px;color:var(--ink-2);opacity:0;transition:opacity .2s;white-space:nowrap;background:none;border:0;padding:0;cursor:default;font-family:inherit}
+.saving-chip.bad{color:var(--late);font-weight:700;cursor:pointer;text-decoration:underline}
+.who-btn{border:1px solid var(--line);background:var(--panel-2);border-radius:999px;padding:5px 11px;font-size:14px;cursor:pointer;white-space:nowrap}
+@media(max-width:620px){
+  .top-in{flex-wrap:wrap}
+  .brand{order:1;flex:1} .icon-btn,.who-btn{order:2}
+  nav.tabs{order:3;width:100%;justify-content:space-between}
+  nav.tabs button{flex:1;padding:7px 4px;text-align:center;font-size:14px}
+}
+/* colour popover */
+.pop{position:absolute;right:12px;top:52px;z-index:50;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:14px;width:246px;display:none}
+.pop.on{display:block}
+.pop h4{font-family:var(--cond);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);margin:0 0 8px}
+.sw-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.sw{width:32px;height:32px;border-radius:50%;border:2px solid transparent;cursor:pointer;padding:0;position:relative}
+.sw.on{border-color:var(--ink)}
+.sw.custom{background:conic-gradient(#c0392b,#e0a020,#1f7a4a,#2980b9,#8e44ad,#c0392b);overflow:hidden}
+.sw.custom input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;border:0;padding:0}
+.seg{display:flex;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.seg button{flex:1;background:var(--panel-2);border:0;padding:7px 0;font-size:13px;cursor:pointer;color:var(--ink-2)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);font-weight:600}
+
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}
+.pad{padding:16px}
+.row{display:flex;gap:10px;align-items:center}
+.muted{color:var(--ink-2)}
+.small{font-size:14px} .tiny{font-size:12.5px}
+.btn{background:var(--accent);color:var(--accent-ink);border:0;border-radius:10px;padding:11px 16px;font-weight:600;cursor:pointer}
+.btn:hover{filter:brightness(1.07)}
+.btn.ghost{background:var(--panel-2);color:var(--ink);border:1px solid var(--line)}
+.btn.sm{padding:7px 11px;font-size:14px;border-radius:8px}
+.btn.big{width:100%;padding:15px;font-size:17px}
+.btn.up{background:var(--up);color:#fff}
+.btn.danger{background:var(--late-bg);color:var(--late)}
+.tag{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:13px;font-weight:600;background:var(--panel-2);color:var(--ink-2);border:1px solid var(--line)}
+.tag.up{background:var(--up-bg);color:var(--up);border-color:transparent}
+.tag.late{background:var(--late-bg);color:var(--late);border-color:transparent}
+.av{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff;flex:none;background:var(--ink-2)}
+label.f{display:block;font-family:var(--cond);font-size:13px;font-weight:700;color:var(--ink-2);margin:0 0 4px;text-transform:uppercase;letter-spacing:.05em}
+input[type=text],input[type=date],input[type=number],input[type=tel],select,textarea{
+  width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:var(--panel-2)}
+textarea{min-height:80px;resize:vertical}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:560px){.f-row{grid-template-columns:1fr}}
+.sec{display:flex;align-items:center;justify-content:space-between;margin:26px 0 10px}
+.empty{padding:24px;text-align:center;color:var(--ink-2)}
+hr.sep{border:0;border-top:1px solid var(--line-2);margin:16px 0}
+.stack{display:grid;gap:12px}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.stat{padding:14px}
+.stat .n{font-family:var(--cond);font-size:30px;font-weight:700;line-height:1.1}
+.stat .l{font-family:var(--cond);font-size:13px;color:var(--ink-2);text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+
+.job{padding:14px;cursor:pointer;display:grid;gap:7px}
+.job:hover{border-color:var(--accent)}
+.job .hd{display:flex;gap:10px;align-items:center}
+.job .hd strong{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ref{font-size:13px;color:var(--ink-2)}
+.line{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.cal .dow{background:var(--panel-2);padding:7px 0;font-family:var(--cond);font-size:12px;font-weight:700;color:var(--ink-2);text-transform:uppercase;text-align:center}
+.cal .day{background:var(--panel);min-height:84px;padding:6px;font-size:13px;overflow:hidden}
+.cal .day.off{background:var(--panel-2);color:var(--ink-2)}
+.cal .day.today .dn{background:var(--accent);color:var(--accent-ink);border-radius:6px;padding:0 5px}
+.dn{font-weight:700;font-size:12.5px}
+.ev{margin-top:3px;padding:2px 6px;border-radius:5px;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.ev.up{background:var(--up-bg);color:var(--up)}
+.ev.down{background:var(--panel-2);color:var(--ink-2)}
+.ev.insp{background:var(--late-bg);color:var(--late)}
+@media(max-width:620px){.cal .day{min-height:58px;padding:3px}.ev{font-size:0;height:5px;padding:0;margin-top:3px;border-radius:3px}
+  .ev.up{background:var(--up)} .ev.down{background:var(--ink-2)} .ev.insp{background:var(--late)}}
+
+.scrim{position:fixed;inset:0;background:rgba(8,12,18,.45);z-index:60;opacity:0;pointer-events:none;transition:opacity .15s}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(620px,100%);background:var(--bg);z-index:61;transform:translateX(100%);transition:transform .18s ease;overflow-y:auto}
+.drawer.on{transform:none}
+.dhd{position:sticky;top:0;background:var(--panel);border-bottom:1px solid var(--line);padding:12px 16px;display:flex;gap:10px;align-items:center;z-index:2}
+.dhd strong{flex:1}
+.x{background:none;border:0;font-size:24px;line-height:1;cursor:pointer;color:var(--ink-2);padding:0 6px}
+.dbody{padding:16px}
+.toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,18px);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;z-index:90;opacity:0;transition:.16s;pointer-events:none;font-size:15px}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.banner{margin-bottom:14px;padding:11px 14px;border-radius:10px;background:var(--late-bg);color:var(--late);font-size:14px;font-weight:600}
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
+.chips button{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:6px 13px;font-size:14px;cursor:pointer;color:var(--ink-2)}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+/* pick a date */
+.dfield{display:grid;gap:4px}
+.dbtn{width:100%;text-align:left;padding:11px;border:1px solid var(--line);border-radius:10px;background:var(--panel-2);cursor:pointer;font-weight:600}
+.dbtn.empty{color:var(--ink-2);font-weight:400}
+.dbtn.on{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 22%,transparent)}
+.dp{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:10px;margin-top:6px;box-shadow:var(--shadow)}
+.dp-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.dp-hd strong{font-family:var(--cond);font-size:17px}
+.dp-nav{background:var(--panel-2);border:1px solid var(--line);border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:17px;line-height:1}
+.dp-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.dp-grid .wd{text-align:center;font-family:var(--cond);font-size:11px;color:var(--ink-2);text-transform:uppercase;padding-bottom:2px}
+.dcell{aspect-ratio:1;border:0;border-radius:8px;background:var(--panel-2);cursor:pointer;font-size:14px;color:var(--ink);padding:0}
+.dcell:hover{background:color-mix(in srgb,var(--accent) 16%,var(--panel-2))}
+.dcell.off{opacity:.38}
+.dcell.td{outline:1.5px solid var(--ink-2)}
+.dcell.on{background:var(--accent);color:var(--accent-ink);font-weight:700}
+.dp-foot{display:flex;gap:8px;margin-top:9px}
+.dp-foot button{flex:1}
+/* site photo */
+.photo{width:100%;border-radius:12px;display:block;border:1px solid var(--line)}
+.photo-sm{width:100%;max-height:190px;object-fit:cover;border-radius:12px;display:block;border:1px solid var(--line);cursor:pointer}
+/* signature */
+.sigwrap{border:1.5px dashed var(--line);border-radius:10px;background:#fff;padding:6px}
+#sigPad{width:100%;height:170px;display:block;touch-action:none;cursor:crosshair;background:#fff;border-radius:6px}
+.sigshot{width:100%;max-width:320px;background:#fff;border:1px solid var(--line);border-radius:8px;display:block}
+.doc{width:100%;border:1px solid var(--line);border-radius:10px;display:block;background:#fff}
+.thumb{width:56px;height:56px;border-radius:9px;object-fit:cover;flex:none;border:1px solid var(--line)}
+.job .hd .thumb{margin-right:2px}
+/* the little offline map */
+.minimap{width:100%;height:auto;border-radius:12px;background:var(--panel-2);border:1px solid var(--line)}
+.people{display:grid;gap:8px}
+.person{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line-2)}
+.person:last-child{border-bottom:0}
+.person .nm{flex:1}
+@media print{header.top,.btn,.chips,nav.tabs{display:none!important}body{background:#fff}}
+</style>
+
+<!-- ===== native shell adjustments =====================================================
+     Only applies inside the iOS/Android app (body gets .native from native.js). In a
+     plain browser none of this fires, so the web build looks exactly as it always did.
+     iOS needs the constant() spelling as well as env() for older WebKit. -->
+<style>
+:root{
+  --sa-top:env(safe-area-inset-top,0px);
+  --sa-bot:env(safe-area-inset-bottom,0px);
+  --sa-left:env(safe-area-inset-left,0px);
+  --sa-right:env(safe-area-inset-right,0px);
+}
+@supports(padding:constant(safe-area-inset-top)){
+  :root{ --sa-top:constant(safe-area-inset-top,0px); --sa-bot:constant(safe-area-inset-bottom,0px); }
+}
+/* Header sits under the status bar, so it carries the inset itself and paints behind it. */
+body.native header.top{ padding-top:var(--sa-top); }
+body.native .wrap{
+  padding-left:calc(16px + var(--sa-left));
+  padding-right:calc(16px + var(--sa-right));
+  padding-bottom:calc(90px + var(--sa-bot));
+}
+body.native .drawer{
+  padding-top:var(--sa-top);
+  padding-bottom:var(--sa-bot);
+  padding-right:var(--sa-right);
+}
+body.native .toast{ bottom:calc(20px + var(--sa-bot)); }
+
+/* A finger is not a mouse. Kill the tap flash, stop long-press turning into a text
+   selection on buttons, and let the browser know taps need no 300ms click delay. */
+body.native{ -webkit-tap-highlight-color:transparent; touch-action:manipulation; }
+body.native button,
+body.native .seg>button,
+body.native [data-act]{ -webkit-user-select:none; user-select:none; }
+/* but text the crew may want to copy stays selectable */
+body.native input, body.native textarea, body.native .selectable{ -webkit-user-select:text; user-select:text; }
+
+/* iOS zooms the page in when a focused input is under 16px. Every input in this app is
+   already 16px via font:inherit, but belt and braces for the small ones. */
+body.native input, body.native select, body.native textarea{ font-size:max(16px,1em); }
+
+/* Momentum scrolling inside the job drawer. */
+body.native .drawer{ -webkit-overflow-scrolling:touch; }
+
+/* The signature pad already sets touch-action:none on #sigPad, so a finger drawing on it
+   never scrolls the page. Nothing to add here. */
+</style>
+
+<header class="top">
+  <div class="top-in">
+    <span class="brand" id="brandName">My Scaffolding Ltd</span>
+    <nav class="tabs" id="tabs">
+      <button data-view="today">Today</button>
+      <button data-view="jobs">Jobs</button>
+      <button data-view="cal">Calendar</button>
+      <button data-view="docs">Docs</button>
+      <button data-view="settings">Settings</button>
+    </nav>
+    <button id="savingChip" class="saving-chip" type="button"></button>
+    <button class="icon-btn colour" id="colourBtn" title="Change the colour" aria-label="Change the colour"></button>
+    <button class="who-btn" id="whoBtn">Sign in</button>
+  </div>
+</header>
+
+<div class="pop" id="colourPop">
+  <h4>Colour</h4>
+  <div class="sw-row" id="swatches"></div>
+  <h4>Light or dark</h4>
+  <div class="seg" id="modeSeg">
+    <button data-mode="system">Auto</button><button data-mode="light">Light</button><button data-mode="dark">Dark</button>
+  </div>
+</div>
+
+<div class="wrap"><div id="app"></div></div>
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer"><div class="dhd"><strong id="drawerTitle">Job</strong><button class="x" id="drawerClose">&times;</button></div><div class="dbody" id="drawerBody"></div></aside>
+<div class="toast" id="toast"></div>
+
+<!-- Loaded in order, before the app itself. In a plain browser Capacitor is absent and
+     native.js quietly does nothing, so this one file still serves the web build. -->
+<script src="config.js"></script>
+<script src="auth.js"></script>
+<script src="sync.js"></script>
+<script src="native.js"></script>
+
+<script id="app-state" type="application/json">null</script>
+<script>
+"use strict";
+/* ------------------------------------------------------------------
+ * My Scaffolding Ltd — one job, one date up, one date down.
+ * Shared through the published link when it can be; otherwise kept
+ * on this device. Export a backup from Settings.
+ * ------------------------------------------------------------------ */
+
+const LS_KEY='scaffold-tracker-v1', LS_ME='scaffold-tracker-me', LS_THEME='scaffold-tracker-theme';
+const MAX_STATE=3.4e6;          /* what a save can carry */
+const PHOTO_ROOM=420000;        /* keep this much free before allowing another photo */
+let localFull=false, saveState='idle';
+const STATUS={ booked:{label:'Booked in'}, up:{label:'Up'}, down:{label:'Down'} };
+const COLOURS=[
+  {name:'Navy',    hex:'#1d4667'},
+  {name:'Graphite',hex:'#3a4149'},
+  {name:'Teal',    hex:'#14555e'},
+  {name:'Burgundy',hex:'#7a2b34'},
+  {name:'Indigo',  hex:'#3a3a72'},
+  {name:'Bronze',  hex:'#8a5a12'}
+];
+
+let S=null, me=null, view='today', mode='local', roMsg='', themeMode=null;
+/* Who is on the tracker. Fetched when Settings opens, so the panel can render
+   without every screen paying for a round trip. */
+let people=[], peopleFor=null, authPane=null;
+/* What the server said its revision was last time we spoke to it. null means we have
+   never had a clean read — so the next save has to read before it writes. */
+let srvRev=null, pollTimer=null, lastPoll=0;
+let filter={status:'active', q:''}, calCursor=null, openJob=null;
+
+const uid=p=>(p||'id')+'_'+Math.random().toString(36).slice(2,9);
+const isoOf=d=>{const x=new Date(d);return new Date(x.getTime()-x.getTimezoneOffset()*6e4).toISOString().slice(0,10);};
+const todayISO=()=>isoOf(new Date());
+const nowISO=()=>new Date().toISOString();
+const esc=t=>String(t==null?'':t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const plus=(base,n)=>{const d=new Date(base+'T00:00:00');d.setDate(d.getDate()+n);return isoOf(d);};
+function days(a,b){ if(!a||!b) return null; return Math.round((new Date(b+'T00:00:00')-new Date(a+'T00:00:00'))/864e5); }
+function fmt(d){ if(!d) return '—'; const x=new Date(d.slice(0,10)+'T00:00:00');
+  return x.toLocaleDateString(undefined,{day:'numeric',month:'short',year:x.getFullYear()===new Date().getFullYear()?undefined:'2-digit'}); }
+function rel(d){ const n=days(todayISO(),d); if(n===null) return '';
+  return n===0?'today':n===1?'tomorrow':n===-1?'yesterday':n>0?'in '+n+' days':n*-1+' days ago'; }
+function toast(m){ const t=document.getElementById('toast'); t.textContent=m; t.classList.add('on');
+  clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('on'),2200); }
+
+function blankState(){
+  return { v:2, company:'My Scaffolding Ltd',
+    settings:{currency:'£', inspections:true, inspectionDays:7, colour:'#1d4667', yard:null, logo:null, details:''},
+    seq:1, members:[], jobs:[], tombs:{} };
+}
+
+/* ---------- people ---------- */
+/* Four digits is not security — anyone determined could guess it. It is there
+   so a name on a certificate means the person holding that PIN put it there,
+   rather than whoever happened to pick their name off a list. */
+function pinHash(pin){
+  let h=2166136261;
+  const t='scaffold:'+String(pin);
+  for(let i=0;i<t.length;i++){ h^=t.charCodeAt(i); h=Math.imul(h,16777619); }
+  return (h>>>0).toString(36);
+}
+let pinFor=null;
+
+/* ---------- accounts ------------------------------------------------------
+   One screen for signing in and signing up: a scaffolder should not have to
+   work out which of two buttons he needs. Same two boxes either way. */
+function openAuth(mode){
+  authPane = mode || 'in';
+  const up = authPane==='up';
+  openDrawer(up?'Create an account':'Sign in', `
+    <p class="small muted">${up
+      ? 'Your email is how the rest of the crew give you access to a tracker.'
+      : 'Sign in with the email your tracker was shared with.'}</p>
+    <div class="card pad stack">
+      <label class="lbl">EMAIL</label>
+      <input type="email" id="auEmail" autocapitalize="none" autocorrect="off" spellcheck="false" inputmode="email" value="${esc(lastEmail())}">
+      <label class="lbl">PASSWORD</label>
+      <input type="password" id="auPass" autocapitalize="none" autocorrect="off" spellcheck="false">
+      <div id="auMsg" class="small" style="min-height:18px"></div>
+      <div class="row" style="flex-wrap:wrap">
+        <button class="btn" data-act="${up?'dosignup':'dosignin'}">${up?'Create account':'Sign in'}</button>
+        <button class="btn ghost" data-act="${up?'toin':'toup'}">${up?'I already have one':'Create an account'}</button>
+      </div>
+      ${up?'':`<hr class="sep"><div class="row"><button class="btn sm ghost" data-act="doreset">Forgot the password</button></div>`}
+    </div>`);
+}
+const LS_LASTMAIL='scaffold-tracker-lastemail';
+function lastEmail(){ try{ return localStorage.getItem(LS_LASTMAIL)||''; }catch(e){ return ''; } }
+function rememberEmail(v){ try{ localStorage.setItem(LS_LASTMAIL, v||''); }catch(e){} }
+function authMsg(t, bad){
+  const el=document.getElementById('auMsg'); if(!el) return;
+  el.textContent=t||''; el.style.color = bad ? 'var(--late)' : 'var(--ink-2)';
+}
+
+/* What happens the moment somebody gets in: take any invitations addressed to
+   them, then put them on a tracker. One tracker and we just open it; several and
+   they pick; none and they are told how to get one. */
+async function afterSignIn(){
+  closeDrawer();
+  toast('Signed in');
+  try{ await Backend.acceptInvites(); }catch(e){}
+
+  let list=[];
+  try{ list = await Backend.list(); }catch(e){ list=[]; }
+
+  if(list.length===1){
+    Backend.select(list[0].id, list[0].role);
+    await adoptTracker();
+    return;
+  }
+  if(list.length>1){
+    openDrawer('Which tracker?', `<p class="small muted">You have access to more than one.</p>
+      <div class="card pad stack">
+        ${list.map(t=>`<button class="btn ghost" data-act="picktracker" data-id="${esc(t.id)}" data-role="${esc(t.role)}" style="text-align:left">
+          ${esc(t.company||'Untitled')} <span class="small muted">— ${({owner:'owner',editor:'can edit',viewer:'view only'})[t.role]||t.role}</span>
+        </button>`).join('')}
+      </div>`);
+    return;
+  }
+  render();
+  toast('Signed in — start a tracker or claim one in Settings');
+}
+
+/* Pull a tracker down and make it the one this phone is on. */
+async function adoptTracker(){
+  try{
+    const got=await Backend.load();
+    srvRev=got.rev; mode='shared';
+    const theirs=upgrade(got.state);
+    const hadOwn=(S.jobs||[]).length>0;
+    S = theirs ? mergeStates(S, theirs) : S;
+    cacheLocal(); await loadPeople(true); startPolling(); render(); remindInspections();
+    if(hadOwn && Backend.canEdit()){ dirty=true; queueSave(300); }
+  }catch(e){
+    if(e && e.code==='signed_out') return openAuth('in');
+    toast(e && e.code==='offline' ? 'Signed in — no signal to fetch the jobs yet' : 'Could not open that tracker');
+    render();
+  }
+}
+
+/* Refresh the member list behind the Settings panel, then repaint it. */
+async function loadPeople(force){
+  if(!window.Backend || !Backend.joined()) { people=[]; return; }
+  const id=Backend.trackerId();
+  if(!force && peopleFor===id) return;
+  try{ people = await Backend.people(); peopleFor=id; }
+  catch(e){ people=[]; }
+  if(view==='settings') render();
+}
+function askPin(cb){
+  if(!me){ pickMe(); return; }
+  const m=member(me);
+  if(!m || !m.pinHash){ cb(); return; }        /* nobody has set one — carry on */
+  pinFor={cb};
+  openDrawer('Your PIN', `<div class="card pad stack">
+    <p style="margin:0">${esc(m.name)} — type your four digits to sign this off.</p>
+    <input type="tel" id="pinBox" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off"
+      style="font-size:30px;letter-spacing:.4em;text-align:center" placeholder="••••">
+    <div class="row"><button class="btn" data-act="pinok">Confirm</button>
+    <button class="btn ghost" data-act="pincancel">Cancel</button></div>
+    <p class="tiny muted" style="margin:0">Forgotten it? Anyone can reset it in Settings.</p>
+  </div>`);
+  setTimeout(()=>{ const b=document.getElementById('pinBox'); if(b) b.focus(); },60);
+}
+function setPinForm(id){
+  const m=member(id); if(!m) return;
+  openDrawer(m.pinHash? 'Change '+m.name+'\'s PIN' : 'Set a PIN for '+m.name, `<div class="card pad stack">
+    <p style="margin:0">Four digits, typed when ${esc(m.name)} signs off a handover or an inspection.</p>
+    <input type="tel" id="newPin" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off"
+      style="font-size:30px;letter-spacing:.4em;text-align:center" placeholder="••••">
+    <div class="row"><button class="btn" data-act="savepin" data-mid="${id}">Save it</button>
+      ${m.pinHash? `<button class="btn ghost" data-act="clearpin" data-mid="${id}">Remove the PIN</button>`:''}
+      <button class="btn ghost" data-view="settings">Cancel</button></div>
+  </div>`);
+  setTimeout(()=>{ const b=document.getElementById('newPin'); if(b) b.focus(); },60);
+}
+const member=id=>S.members.find(m=>m.id===id);
+const mName=id=>(member(id)||{}).name||'someone';
+function initials(n){ return n.trim().split(/\s+/).map(w=>w[0]).join('').slice(0,2).toUpperCase(); }
+function avatar(id){ const m=member(id); return m? `<span class="av" title="${esc(m.name)}">${esc(m.initials||initials(m.name))}</span>`:''; }
+function addMember(name,role,cisrs){
+  const m={id:uid('m'),name:name.trim(),role:role||'',cisrs:(cisrs||'').trim(),initials:initials(name),active:true};
+  S.members.push(m); save(); return m;
+}
+
+/* ---------- jobs ---------- */
+function newJob(d){
+  const j=Object.assign({
+    id:uid('j'), ref:'JOB-'+String(S.seq++).padStart(4,'0'),
+    client:'', site:'', contact:'', phone:'', notes:'', status:'booked',
+    value:0, hireRate:0, crew:[], location:null, photo:null, thumb:null,
+    dates:{erect:'', up:'', offHire:'', dismantle:'', down:''},
+    inspection:{next:'', last:'', by:''},
+    activity:[], createdAt:nowISO(), updatedAt:nowISO()
+  }, d||{});
+  S.jobs.unshift(j); log(j,'created the job'); save(); return j;
+}
+function log(j,text){ (j.activity=j.activity||[]).unshift({at:nowISO(),by:me,text});
+  j.activity=j.activity.slice(0,80); j.updatedAt=nowISO(); }
+
+const isUp=j=>j.status==='up';
+const isActive=j=>j.status!=='down';
+function daysUp(j){ return j.dates.up? Math.max(0,days(j.dates.up, j.dates.down||todayISO())) : 0; }
+/* Hire stops the day the client off-hires, not the day the kit comes back. */
+function hireDays(j){
+  if(!j.dates.up) return 0;
+  const end=j.dates.offHire || j.dates.down || todayISO();
+  return Math.max(0, days(j.dates.up, end));
+}
+function hireEarned(j){ return Math.round((Number(j.hireRate)||0)*hireDays(j)/7); }
+const onHire=j=>isUp(j) && !j.dates.offHire;
+const money=n=>(S.settings.currency||'£')+(Number(n)||0).toLocaleString(undefined,{maximumFractionDigits:0});
+function inspectionDue(j){ return (S.settings.inspections && isUp(j) && j.inspection && j.inspection.next) ? j.inspection.next : null; }
+function inspectionLate(j){ const d=inspectionDue(j); return d && d<todayISO(); }
+
+function markUp(j){
+  if(!guard()) return;
+  j.status='up'; j.dates.up=j.dates.up||todayISO();
+  if(S.settings.inspections) j.inspection={next:plus(j.dates.up, Number(S.settings.inspectionDays)||7), last:'', by:''};
+  log(j,'put the scaffold UP'); save(); render(); drawJob(); toast('Marked up');
+}
+function markDown(j){
+  if(!guard()) return;
+  j.status='down'; j.dates.down=j.dates.down||todayISO();
+  j.inspection={next:'',last:j.inspection&&j.inspection.last||'',by:j.inspection&&j.inspection.by||''};
+  log(j,'took the scaffold DOWN'); save(); render(); drawJob(); toast('Marked down');
+}
+/* Reminders follow the setting: off clears them, on gives every standing
+   scaffold a date again, counted from its last inspection or the day it went up. */
+function reseedInspections(){
+  const n=Number(S.settings.inspectionDays)||7;
+  S.jobs.forEach(j=>{
+    if(!S.settings.inspections || !isUp(j)){ j.inspection={next:'',last:j.inspection&&j.inspection.last||'',by:j.inspection&&j.inspection.by||''}; return; }
+    const from=(j.inspection&&j.inspection.last)||j.dates.up||todayISO();
+    j.inspection={next:plus(from,n), last:(j.inspection&&j.inspection.last)||'', by:(j.inspection&&j.inspection.by)||''};
+  });
+}
+
+/* Any alteration makes the last inspection void — it must be looked at again
+   before anyone works off it. */
+function markAltered(j){
+  if(!guard()) return;
+  askPin(()=>{
+    j.inspection={next:todayISO(), last:(j.inspection&&j.inspection.last)||'', by:(j.inspection&&j.inspection.by)||'', altered:todayISO(), alteredBy:me};
+    log(j,'recorded an alteration — needs inspecting before use again');
+    save(); render(); drawJob(); toast('Noted. It needs inspecting before anyone works off it.');
+  });
+}
+
+function markInspected(j){
+  if(!guard()) return;
+  const n=Number(S.settings.inspectionDays)||7;
+  askPin(()=>{
+    j.inspection={next:plus(todayISO(),n), last:todayISO(), by:me, altered:'', alteredBy:''};
+    log(j,'inspected the scaffold'); save(); render(); drawJob(); toast('Next one due '+fmt(j.inspection.next));
+  });
+}
+let pendingYes=null;
+/* The browser's own confirm() box never appears inside the published page,
+   so anything that needs a second press asks for it on the page itself. */
+function askFirst(title, question, yesLabel, onYes){
+  pendingYes=onYes;
+  openDrawer(title, `<div class="card pad stack">
+    <p style="margin:0">${question}</p>
+    <div class="row"><button class="btn danger" data-act="yes">${yesLabel}</button>
+    <button class="btn ghost" data-act="no">Cancel</button></div></div>`);
+}
+/* Same client, same rates, clean dates — most jobs are last week's job at a new address. */
+function duplicateJob(j){
+  if(!guard()) return;
+  const copy=newJob({
+    client:j.client, site:'', contact:j.contact, phone:j.phone,
+    notes:j.notes, value:j.value, hireRate:j.hireRate, crew:(j.crew||[]).slice(),
+    dates:{erect:'',up:'',dismantle:'',down:''}
+  });
+  log(copy,'copied from '+j.ref);
+  save(); openJob=copy.id; render(); drawJob();
+  toast('Copied — put the new address and dates in');
+}
+const telHref=p=>'tel:'+String(p||'').replace(/[^\d+]/g,'');
+
+/* ---------- paperwork ---------- */
+const SCAFFOLD_TYPES=['Independent tied scaffold','Putlog scaffold','Birdcage','Mobile / static tower',
+  'Cantilever or drop scaffold','Temporary roof','Loading bay','Chimney / access stack','Other'];
+const DESIGN_BASIS=['TG20:21 compliance sheet','Bespoke engineered design','Manufacturer\'s standard configuration'];
+const LOAD_CLASSES=[
+  'Class 1 — inspection & very light duty (0.75 kN/m²)',
+  'Class 2 — light duty (1.50 kN/m²)',
+  'Class 3 — general building (2.00 kN/m²)',
+  'Class 4 — heavy duty / blockwork (3.00 kN/m²)',
+  'Class 5 — masonry (4.50 kN/m²)',
+  'Class 6 — heavy masonry (6.00 kN/m²)'
+];
+function certNo(j){ return 'HO-'+(j.ref.split('-')[1]||'0001'); }
+
+/* Draw a document on a canvas so it can be saved as a picture and sent on. */
+function docCanvas(lines, opts){
+  opts=opts||{};
+  const W=1000, pad=56;
+  const logo=opts.logo, logoH=logo? Math.min(84, logo.height) : 0;
+  const logoW=logo? Math.round(logo.width*(logoH/logo.height)) : 0;
+  const c=document.createElement('canvas');
+  const ctx=c.getContext('2d');
+  const font=(sz,w)=>`${w||400} ${sz}px "Barlow", -apple-system, "Segoe UI", Arial, sans-serif`;
+  /* first pass to measure height */
+  const measure=()=>{
+    let y=pad;
+    lines.forEach(l=>{
+      if(l.t==='gap'){ y+=l.h||18; return; }
+      if(l.t==='rule'){ y+=18; return; }
+      if(l.t==='img'){ y+=(l.h||220)+16; return; }
+      if(l.t==='sig'){ y+=150; return; }
+      ctx.font=font(l.size||18,l.weight);
+      const words=String(l.text||'').split(' ');
+      let line='', rows=1;
+      words.forEach(w=>{ const test=line?line+' '+w:w;
+        if(ctx.measureText(test).width>W-pad*2-(l.indent||0)){ line=w; rows++; } else line=test; });
+      y+=rows*((l.size||18)+8)+(l.after||0);
+    });
+    return y+pad;
+  };
+  c.width=W; c.height=Math.max(560, measure());
+  ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,c.width,c.height);
+  ctx.fillStyle='#111111'; ctx.textBaseline='top';
+  if(logo) ctx.drawImage(logo, W-pad-logoW, pad, logoW, logoH);
+  let y=pad;
+  lines.forEach(l=>{
+    if(l.t==='gap'){ y+=l.h||18; return; }
+    if(l.t==='rule'){ ctx.strokeStyle=l.strong?'#111':'#d5d5d5'; ctx.lineWidth=l.strong?2:1;
+      ctx.beginPath(); ctx.moveTo(pad,y+8); ctx.lineTo(W-pad,y+8); ctx.stroke(); y+=18; return; }
+    if(l.t==='img'&&l.img){ const h=l.h||220, w=Math.min(W-pad*2, l.img.width*(h/l.img.height));
+      ctx.drawImage(l.img,pad,y,w,h); y+=h+16; return; }
+    if(l.t==='sig'){
+      const boxW=(W-pad*2-40)/2;
+      [[l.leftLabel,l.leftName,l.leftImg,pad],[l.rightLabel,l.rightName,l.rightImg,pad+boxW+40]].forEach(([lab,nm,im,x])=>{
+        if(im){ const h=90, w=Math.min(boxW, im.width*(h/im.height)); ctx.drawImage(im,x,y,w,h); }
+        ctx.strokeStyle='#111'; ctx.lineWidth=1;
+        ctx.beginPath(); ctx.moveTo(x,y+100); ctx.lineTo(x+boxW,y+100); ctx.stroke();
+        const fit=(t,px,w)=>{ ctx.font=px; t=String(t||'');
+          if(ctx.measureText(t).width<=w) return t;
+          while(t.length>3 && ctx.measureText(t+'…').width>w) t=t.slice(0,-1);
+          return t+'…'; };
+        ctx.fillStyle='#555'; ctx.fillText(fit(lab,font(14),boxW),x,y+106);
+        ctx.fillStyle='#111'; ctx.fillText(fit(nm,font(17,600),boxW),x,y+126);
+      });
+      y+=150; return;
+    }
+    ctx.fillStyle=l.colour||'#111111';
+    ctx.font=font(l.size||18,l.weight);
+    const words=String(l.text||'').split(' ');
+    let line='', x=pad+(l.indent||0);
+    /* keep the first couple of lines clear of the logo */
+    const room = (logo && y<pad+logoH) ? W-pad*2-(l.indent||0)-logoW-24 : W-pad*2-(l.indent||0);
+    words.forEach(w=>{ const test=line?line+' '+w:w;
+      if(ctx.measureText(test).width>room){ ctx.fillText(line,x,y); y+=(l.size||18)+8; line=w; }
+      else line=test; });
+    ctx.fillText(line,x,y); y+=(l.size||18)+8+(l.after||0);
+  });
+  return c;
+}
+function loadImg(src){ return new Promise(res=>{ if(!src) return res(null);
+  const i=new Image(); i.onload=()=>res(i); i.onerror=()=>res(null); i.src=src; }); }
+
+async function jobSheetCanvas(j){
+  const photo=await loadImg(j.photo), logo=await loadImg(S.settings.logo);
+  const crew=(j.crew||[]).map(mName).join(', ')||'—';
+  const lines=[
+    {text:(S.company||'').toUpperCase(), size:20, weight:600, colour:'#555'},
+    {text:(S.settings.details||'').replace(/\n/g,'  ·  '), size:15, colour:'#666', after:4},
+    {text:'JOB SHEET', size:44, weight:700, after:4},
+    {text:j.ref+'   ·   printed '+fmt(todayISO()), size:17, colour:'#555'},
+    {t:'rule', strong:true},
+    {text:'CLIENT', size:15, weight:600, colour:'#555'}, {text:j.client||'—', size:26, weight:600, after:8},
+    {text:'SITE', size:15, weight:600, colour:'#555'}, {text:j.site||'—', size:22, after:8},
+    {text:'CONTACT', size:15, weight:600, colour:'#555'},
+    {text:[j.contact,j.phone].filter(Boolean).join('  ·  ')||'—', size:20, after:12},
+    {t:'rule'},
+    {text:'GOING UP', size:15, weight:600, colour:'#555'}, {text:fmt(j.dates.erect), size:24, weight:600},
+    {text:'COMING DOWN', size:15, weight:600, colour:'#555'}, {text:fmt(j.dates.dismantle), size:24, weight:600, after:8},
+    ...(j.dates.offHire? [{text:'OFF-HIRED', size:15, weight:600, colour:'#555'},{text:fmt(j.dates.offHire), size:20, after:8}] : []),
+    {text:'CREW', size:15, weight:600, colour:'#555'}, {text:crew, size:20, after:8},
+    {text:'PRICE', size:15, weight:600, colour:'#555'},
+    {text:money(j.value)+(j.hireRate? '   ·   hire '+money(j.hireRate)+' per week':''), size:22, after:10},
+    {t:'rule'},
+    {text:'NOTES', size:15, weight:600, colour:'#555'}, {text:j.notes||'—', size:19, after:10}
+  ];
+  if(j.location) lines.push({text:'LOCATION', size:15, weight:600, colour:'#555'},
+    {text:j.location.lat.toFixed(5)+', '+j.location.lng.toFixed(5), size:19, after:10});
+  if(photo) lines.push({t:'gap',h:6},{t:'img', img:photo, h:300});
+  return docCanvas(lines,{logo});
+}
+
+/* Laid out to carry what the Work at Height Regulations 2005 Schedule 7 asks of a
+   first-use inspection record, and what NASC SG35 / TG20:21 expect of a handover. */
+async function certCanvas(j){
+  const h=j.handover||{};
+  const sig=await loadImg(h.signature), logo=await loadImg(S.settings.logo);
+  const who=member(h.by)||{};
+  const card=who.cisrs? '  ·  '+(/^cisrs/i.test(who.cisrs)? who.cisrs : 'CISRS '+who.cisrs) : '';
+  const design=(h.designBasis||DESIGN_BASIS[0])+(h.designRef? ' — ref '+h.designRef : '');
+  return docCanvas([
+    {text:(S.company||'').toUpperCase(), size:20, weight:600, colour:'#555'},
+    {text:(S.settings.details||'').replace(/\n/g,'  ·  '), size:15, colour:'#666', after:4},
+    {text:'SCAFFOLD HANDOVER CERTIFICATE', size:34, weight:700, after:2},
+    {text:'Also serves as the record of inspection before first use — Work at Height Regulations 2005, reg. 12 and Schedule 7.', size:14, colour:'#666'},
+    {text:'Certificate '+(h.no||certNo(j))+'   ·   '+fmt(h.date||todayISO())+(h.time? ' at '+h.time:'')+'   ·   job '+j.ref, size:16, colour:'#555'},
+    {t:'rule', strong:true},
+    {text:'HANDED TO (the person for whom the inspection was carried out)', size:14, weight:600, colour:'#555'},
+    {text:j.client||'—', size:24, weight:600},
+    {text:[j.contact,j.phone].filter(Boolean).join('  ·  '), size:17, colour:'#333', after:8},
+    {text:'LOCATION OF THE SCAFFOLD', size:14, weight:600, colour:'#555'},
+    {text:(j.site||'—')+(j.location? '   ('+j.location.lat.toFixed(5)+', '+j.location.lng.toFixed(5)+')':''), size:20, after:8},
+    {text:'DESCRIPTION', size:14, weight:600, colour:'#555'},
+    {text:(h.type||SCAFFOLD_TYPES[0])+(h.size? ' — '+h.size:''), size:19},
+    {text:j.notes||'', size:17, colour:'#333', after:8},
+    {text:'ERECTED / COMPLETED', size:14, weight:600, colour:'#555'},
+    {text:fmt(j.dates.up||j.dates.erect), size:19, after:8},
+    {t:'rule'},
+    {text:'DUTY AND PERMITTED PLATFORM LOADING', size:14, weight:600, colour:'#555'},
+    {text:h.load||LOAD_CLASSES[2], size:20, weight:600},
+    {text:'One working lift fully loaded, plus a second lift at 50%. Inside boards 0.75 kN/m² at the working lift.', size:15, colour:'#666', after:8},
+    {text:'BUILT TO', size:14, weight:600, colour:'#555'},
+    {text:design, size:19, after:8},
+    {text:'RESTRICTIONS ON USE', size:14, weight:600, colour:'#555'},
+    {text:h.limits||'None stated.', size:18, after:8},
+    {text:'ANYTHING FOUND AT INSPECTION, AND WHAT WAS DONE', size:14, weight:600, colour:'#555'},
+    {text:h.remedy||'Nothing found that could give rise to a risk to health or safety. No further action considered necessary.', size:18, after:10},
+    {t:'rule'},
+    {text:'The scaffold described above has been erected to the specification stated, inspected by a competent person, and is left in a condition suitable for the duty for which it is intended. It is structurally sound, safe for use, and complies with the relevant statutory requirements.', size:16, colour:'#222', after:8},
+    {text:'On accepting this certificate the duty to inspect passes to the user. The scaffold must be inspected by a competent person before first use, at intervals not exceeding 7 days while it remains standing, and after any alteration, damage, high winds or other event likely to have affected its strength or stability. Records must be kept for at least 3 months. Do not alter, add to, overload or strike this scaffold — report any damage or missing components to '+(S.company||'the scaffolding contractor')+' immediately.', size:15, colour:'#444', after:12},
+    {t:'gap',h:8},
+    {t:'sig', leftLabel:'Competent person — '+(who.role||'scaffolder')+card,
+      leftName:(who.name||'—')+'   '+fmt(h.date||todayISO()),
+      rightLabel:h.signature? 'Received and accepted by the client' : 'Awaiting signature — send it back signed',
+      rightName:h.clientName||'—', rightImg:sig}
+  ],{logo});
+}
+
+/* On a phone the paperwork goes straight out through the share sheet — WhatsApp,
+   email, wherever the client is. <a download> does nothing inside a webview, so on
+   native we hand the file to the OS instead. In a browser the old path still runs. */
+async function saveCanvas(c, filename){
+  const blob=await new Promise(r=>c.toBlob(r,'image/png'));
+  if(window.Native && Native.is){
+    try{ await Native.saveFile({filename, data:blob, mime:'image/png', title:'Send this on'}); return; }
+    catch(err){
+      if(err && /cancel/i.test(err.message||'')) return;   /* they backed out — say nothing */
+      toast('Could not share it — try again'); return;
+    }
+  }
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=filename; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000); toast('Saved to your downloads');
+}
+
+function deleteJob(j){
+  if(!canWrite()) return toast('You cannot change this tracker');
+  askFirst('Delete this job?',
+    'This removes <strong>'+esc(j.ref)+(j.client?' — '+esc(j.client):'')+'</strong> and everything on it. It cannot be undone.',
+    'Delete it',
+    ()=>{ (S.tombs=S.tombs||{})[j.id]=nowISO();
+      S.jobs=S.jobs.filter(x=>x.id!==j.id); openJob=null; closeDrawer(); save(); render(); toast('Job deleted'); });
+}
+
+/* ---------- what is happening ---------- */
+function jobEvents(from,to){
+  const out=[];
+  S.jobs.forEach(j=>{
+    const add=(date,label,kind)=>{ if(date&&date>=from&&date<=to) out.push({date,label,kind,job:j}); };
+    if(!j.dates.up) add(j.dates.erect,'Up — '+(j.client||j.ref),'up');
+    if(!j.dates.down) add(j.dates.dismantle,'Down — '+(j.client||j.ref),'down');
+    const insp=inspectionDue(j); if(insp) add(insp,'Inspection — '+(j.client||j.ref),'insp');
+  });
+  return out.sort((a,b)=>a.date.localeCompare(b.date));
+}
+function lateJobs(){
+  const t=todayISO();
+  return S.jobs.filter(j=>
+    (j.status==='booked' && j.dates.erect && j.dates.erect<t) ||
+    (isUp(j) && j.dates.dismantle && j.dates.dismantle<t) ||
+    (isUp(j) && j.dates.offHire && days(j.dates.offHire,t)>7) ||
+    (isUp(j) && j.inspection && j.inspection.altered) ||
+    inspectionLate(j));
+}
+function lateReason(j){
+  const t=todayISO();
+  if(j.status==='booked' && j.dates.erect && j.dates.erect<t) return 'Should have gone up '+fmt(j.dates.erect);
+  if(j.inspection&&j.inspection.altered && isUp(j)) return 'Altered '+fmt(j.inspection.altered)+' — must be inspected before use';
+  if(inspectionLate(j)) return 'Inspection was due '+fmt(j.inspection.next);
+  if(isUp(j) && j.dates.dismantle && j.dates.dismantle<t) return 'Should have come down '+fmt(j.dates.dismantle);
+  if(isUp(j) && j.dates.offHire) return 'Off-hired '+fmt(j.dates.offHire)+' — kit still on site, earning nothing';
+  return '';
+}
+
+/* ---------- location ---------- */
+function parseLocation(text){
+  const t=String(text||'').trim();
+  const pats=[/@(-?\d+\.\d+),(-?\d+\.\d+)/, /[?&](?:q|ll|daddr)=(-?\d+\.\d+),\s*(-?\d+\.\d+)/,
+              /!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/, /^(-?\d{1,2}\.\d+)[, ]+\s*(-?\d{1,3}\.\d+)$/];
+  for(const p of pats){ const m=t.match(p); if(m){ const lat=+m[1],lng=+m[2];
+    if(Math.abs(lat)<=90&&Math.abs(lng)<=180) return {lat,lng}; } }
+  return null;
+}
+const mapsUrl=l=>'https://www.google.com/maps/search/?api=1&query='+l.lat+','+l.lng;
+function haversine(a,b){ const R=6371,rad=x=>x*Math.PI/180;
+  const dLat=rad(b.lat-a.lat),dLng=rad(b.lng-a.lng);
+  const q=Math.sin(dLat/2)**2+Math.cos(rad(a.lat))*Math.cos(rad(b.lat))*Math.sin(dLng/2)**2;
+  return 2*R*Math.asin(Math.sqrt(q)); }
+async function pinHere(cb){
+  /* On a phone, go through the native plugin: one prompt, our wording. The browser
+     path below is unchanged and still runs everywhere else. */
+  if(window.Native && Native.is){
+    toast('Getting the location…');
+    try{ const at = await Native.getPosition(); if(at){ cb(at); return; } }
+    catch(err){
+      toast(err && err.denied ? 'Location permission refused — paste a map link instead'
+                              : 'Could not get a location here');
+      return;
+    }
+  }
+  if(!navigator.geolocation){ toast('This device will not give a location — paste a map link instead'); return; }
+  toast('Getting the location…');
+  navigator.geolocation.getCurrentPosition(
+    p=>cb({lat:+p.coords.latitude.toFixed(6), lng:+p.coords.longitude.toFixed(6)}),
+    e=>toast(e&&e.code===1?'Location permission refused — paste a map link instead':'Could not get a location here'),
+    {enableHighAccuracy:true,timeout:12000,maximumAge:60000});
+}
+
+/* ---------- picking a date ---------- */
+/* A month you can tap, rather than a keyboard and a slash. */
+let dpOpen=null, dpCursor=null, njDraft=null;
+function dateField(ctx,key,label,value){
+  const open = dpOpen===ctx+':'+key;
+  return `<div class="dfield"><label class="f">${label}</label>
+    <button class="dbtn ${value?'':'empty'} ${open?'on':''}" data-datepick="${ctx}:${key}">${value? fmt(value) : 'Tap to pick a date'}</button>
+    ${open? miniCal(ctx,key,value) : ''}</div>`;
+}
+function miniCal(ctx,key,value){
+  const cur = new Date((dpCursor || value || todayISO())+'T00:00:00');
+  const y=cur.getFullYear(), m=cur.getMonth();
+  const first=new Date(y,m,1), start=new Date(first); start.setDate(1-((first.getDay()+6)%7));
+  const cells=[]; const d=new Date(start);
+  for(let i=0;i<42;i++){ cells.push(new Date(d)); d.setDate(d.getDate()+1); }
+  return `<div class="dp">
+    <div class="dp-hd">
+      <button class="dp-nav" data-dpmove="-1" aria-label="Previous month">‹</button>
+      <strong>${cur.toLocaleDateString(undefined,{month:'long',year:'numeric'})}</strong>
+      <button class="dp-nav" data-dpmove="1" aria-label="Next month">›</button>
+    </div>
+    <div class="dp-grid">
+      ${['M','T','W','T','F','S','S'].map(x=>`<div class="wd">${x}</div>`).join('')}
+      ${cells.map(c=>{ const iso=isoOf(c);
+        return `<button class="dcell ${c.getMonth()!==m?'off':''} ${iso===todayISO()?'td':''} ${iso===value?'on':''}" data-pickday="${ctx}:${key}:${iso}">${c.getDate()}</button>`;
+      }).join('')}
+    </div>
+    <div class="dp-foot">
+      <button class="btn sm ghost" data-pickday="${ctx}:${key}:${todayISO()}">Today</button>
+      <button class="btn sm ghost" data-pickday="${ctx}:${key}:">Clear</button>
+    </div>
+  </div>`;
+}
+function setPicked(ctx,key,iso){
+  if(ctx==='nj'){ njDraft[key]=iso; dpOpen=null; dpCursor=null; formNewJob(); return; }
+  const j=S.jobs.find(x=>x.id===openJob); if(!j || !guard()) return;
+  j.dates[key]=iso;
+  if(key==='up'){ if(iso){ j.status='up';
+      if(S.settings.inspections) j.inspection={next:plus(iso,Number(S.settings.inspectionDays)||7),last:j.inspection.last,by:j.inspection.by}; }
+    else if(j.status==='up') j.status='booked'; }
+  if(key==='down'){ if(iso){ j.status='down'; j.inspection={next:'',last:j.inspection.last,by:j.inspection.by}; }
+    else if(j.status==='down'){ j.status = j.dates.up? 'up':'booked'; reseedInspections(); } }
+  log(j, iso? label(key)+' set to '+fmt(iso) : label(key)+' cleared');
+  dpOpen=null; dpCursor=null; save(); render(); drawJob();
+}
+const label=k=>({erect:'Going up',dismantle:'Coming down',up:'Went up',offHire:'Off-hired',down:'Came down'}[k]||k);
+
+/* ---------- a photo of the site ---------- */
+function pickPhoto(cb){
+  const i=document.createElement('input'); i.type='file'; i.accept='image/*'; i.setAttribute('capture','environment');
+  i.onchange=()=>{ const f=i.files[0]; if(!f) return;
+    const r=new FileReader(); r.onload=()=>shrinkPhoto(r.result,cb); r.readAsDataURL(f); };
+  i.click();
+}
+function scaleTo(img,max,quality){
+  let w=img.width,h=img.height;
+  const k=Math.min(1,max/Math.max(w,h)); w=Math.round(w*k); h=Math.round(h*k);
+  const c=document.createElement('canvas'); c.width=w; c.height=h;
+  const x=c.getContext('2d'); x.fillStyle='#fff'; x.fillRect(0,0,w,h); x.drawImage(img,0,0,w,h);
+  return c.toDataURL('image/jpeg',quality);
+}
+/* Two copies: one to look at, and a small one for the list — a full photo
+   behind a 56px square is what made scrolling crawl. */
+function shrinkPhoto(src,cb){
+  const img=new Image();
+  img.onload=()=>{
+    let full=scaleTo(img,900,0.6);
+    if(full.length>320000) full=scaleTo(img,760,0.42);
+    cb(full, scaleTo(img,150,0.5));
+  };
+  img.onerror=()=>toast('That picture could not be read');
+  img.src=src;
+}
+
+function pickLogo(cb){
+  const i=document.createElement('input'); i.type='file'; i.accept='image/*';
+  i.onchange=()=>{ const f=i.files[0]; if(!f) return;
+    const r=new FileReader();
+    r.onload=()=>{ const img=new Image();
+      img.onload=()=>{ const max=520; let w=img.width,h=img.height;
+        const k=Math.min(1,max/Math.max(w,h)); w=Math.round(w*k); h=Math.round(h*k);
+        const c=document.createElement('canvas'); c.width=w; c.height=h;
+        c.getContext('2d').drawImage(img,0,0,w,h);   /* PNG keeps a see-through background */
+        cb(c.toDataURL('image/png')); };
+      img.onerror=()=>toast('That logo could not be read');
+      img.src=r.result; };
+    r.readAsDataURL(f); };
+  i.click();
+}
+
+/* ---------- looking the site up ---------- */
+const addressUrl=a=>'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(a);
+function bearing(a,b){
+  const rad=x=>x*Math.PI/180, deg=x=>x*180/Math.PI;
+  const dLng=rad(b.lng-a.lng);
+  const y=Math.sin(dLng)*Math.cos(rad(b.lat));
+  const x=Math.cos(rad(a.lat))*Math.sin(rad(b.lat))-Math.sin(rad(a.lat))*Math.cos(rad(b.lat))*Math.cos(dLng);
+  return (deg(Math.atan2(y,x))+360)%360;
+}
+const compass=d=>['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'][Math.round(d/22.5)%16];
+/* No street map can load inside the page, so this shows the site against the
+   yard — direction, distance and north — which is what works with no signal. */
+function miniMap(j){
+  const loc=j.location, yard=S.settings.yard;
+  if(!loc) return '';
+  const W=320,H=200,cx=W/2,cy=H/2;
+  if(!yard) return `<svg class="minimap" viewBox="0 0 ${W} ${H}" role="img" aria-label="Site pin">
+      <circle cx="${cx}" cy="${cy}" r="9" fill="var(--accent)"/>
+      <text x="${cx}" y="${cy-16}" text-anchor="middle" font-size="12" fill="var(--ink)" font-family="var(--cond)">SITE</text>
+      <text x="${cx}" y="${cy+30}" text-anchor="middle" font-size="11" fill="var(--ink-2)">${loc.lat.toFixed(4)}, ${loc.lng.toFixed(4)}</text>
+      <text x="10" y="${H-10}" font-size="10" fill="var(--ink-2)">Pin the yard in Settings to see the direction and distance.</text></svg>`;
+  const dist=haversine(yard,loc), brg=bearing(yard,loc);
+  const r=Math.min(W,H)/2-40;
+  const sx=cx+r*Math.sin(brg*Math.PI/180), sy=cy-r*Math.cos(brg*Math.PI/180);
+  return `<svg class="minimap" viewBox="0 0 ${W} ${H}" role="img" aria-label="Site relative to the yard">
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="var(--line)" stroke-dasharray="4 4"/>
+    <line x1="${cx}" y1="${cy}" x2="${sx}" y2="${sy}" stroke="var(--accent)" stroke-width="2"/>
+    <rect x="${cx-6}" y="${cy-6}" width="12" height="12" fill="var(--ink-2)" transform="rotate(45 ${cx} ${cy})"/>
+    <text x="${cx}" y="${cy+22}" text-anchor="middle" font-size="11" fill="var(--ink-2)" font-family="var(--cond)">YARD</text>
+    <circle cx="${sx}" cy="${sy}" r="8" fill="var(--accent)"/>
+    <text x="${sx}" y="${sy-13}" text-anchor="middle" font-size="11" fill="var(--ink)" font-family="var(--cond)">SITE</text>
+    <text x="12" y="20" font-size="11" fill="var(--ink-2)" font-family="var(--cond)">N ↑</text>
+    <text x="${W-12}" y="${H-12}" text-anchor="end" font-size="12" fill="var(--ink)">
+      ${dist<1? Math.round(dist*1000)+' m':dist.toFixed(1)+' km'} ${compass(brg)} of the yard</text>
+  </svg>`;
+}
+
+/* ---------- colour ---------- */
+function hexToRgb(h){ h=String(h||'').replace('#',''); if(h.length===3) h=h.split('').map(c=>c+c).join('');
+  const n=parseInt(h||'1d4667',16); return {r:(n>>16)&255,g:(n>>8)&255,b:n&255}; }
+const toHex=(r,g,b)=>'#'+[r,g,b].map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0')).join('');
+function toHsl(hex){ const {r,g,b}=hexToRgb(hex),R=r/255,G=g/255,B=b/255;
+  const mx=Math.max(R,G,B),mn=Math.min(R,G,B),l=(mx+mn)/2; let h=0,s=0;
+  if(mx!==mn){ const d=mx-mn; s=l>.5?d/(2-mx-mn):d/(mx+mn);
+    h=mx===R?(G-B)/d+(G<B?6:0):mx===G?(B-R)/d+2:(R-G)/d+4; h/=6; }
+  return {h,s,l}; }
+function fromHsl(h,s,l){ const f=(p,q,t)=>{t=(t+1)%1;return t<1/6?p+(q-p)*6*t:t<1/2?q:t<2/3?p+(q-p)*(2/3-t)*6:p;};
+  if(s===0){const v=l*255;return toHex(v,v,v);}
+  const q=l<.5?l*(1+s):l+s-l*s,p=2*l-q;
+  return toHex(f(p,q,h+1/3)*255,f(p,q,h)*255,f(p,q,h-1/3)*255); }
+const lighten=hex=>{const {h,s}=toHsl(hex);return fromHsl(h,Math.min(.55,s*.85),.72);};
+const inkOn=hex=>{const {r,g,b}=hexToRgb(hex);return (0.2126*r+0.7152*g+0.0722*b)/255>0.55?'#0b1620':'#ffffff';};
+function themePref(){ if(themeMode) return themeMode;
+  try{ return localStorage.getItem(LS_THEME)||'system'; }catch(e){ return 'system'; } }
+function setTheme(v){ themeMode=v; try{ localStorage.setItem(LS_THEME,v); }catch(e){} applyColour(); paintPop(); }
+function darkNow(){ const p=themePref();
+  return p==='dark' || (p==='system' && window.matchMedia && matchMedia('(prefers-color-scheme:dark)').matches); }
+function applyColour(){
+  const root=document.documentElement, p=themePref();
+  if(p==='light'||p==='dark') root.dataset.theme=p; else delete root.dataset.theme;
+  const base=(S&&S.settings&&S.settings.colour)||'#1d4667';
+  const acc=darkNow()? lighten(base) : base;
+  root.style.setProperty('--accent',acc);
+  root.style.setProperty('--accent-ink',inkOn(acc));
+  /* the status bar has to follow the theme or it goes black-on-black */
+  if(window.Native) Native.paintStatusBar(darkNow());
+}
+if(window.matchMedia) matchMedia('(prefers-color-scheme:dark)').addEventListener('change',applyColour);
+function paintPop(){
+  const base=(S.settings.colour||'#1d4667').toLowerCase();
+  document.getElementById('swatches').innerHTML =
+    COLOURS.map(c=>`<button class="sw ${base===c.hex?'on':''}" data-colour="${c.hex}" style="background:${c.hex}" title="${c.name}" aria-label="${c.name}"></button>`).join('')
+    + `<label class="sw custom ${COLOURS.every(c=>c.hex!==base)?'on':''}" title="Pick your own"><input type="color" id="colourPick" value="${esc(S.settings.colour||'#1d4667')}"></label>`;
+  document.querySelectorAll('#modeSeg button').forEach(b=>b.setAttribute('aria-pressed',String(themePref()===b.dataset.mode)));
+}
+
+/* ---------- storage ---------- */
+let saveTimer=null, dirty=false;
+
+function stateBytes(){ try{ return JSON.stringify(S).length; }catch(e){ return 0; } }
+function storagePct(){ return Math.min(100, Math.round(100*stateBytes()/MAX_STATE)); }
+function roomForPhoto(){
+  if(MAX_STATE-stateBytes() > PHOTO_ROOM) return true;
+  askFirst('No room for another photo',
+    'The tracker is '+storagePct()+'% full — photos take up nearly all of it. Remove a few from old jobs and the photo will go on fine. Nothing has been lost.',
+    'Show me Settings',
+    ()=>{ view='settings'; closeDrawer(); render(); });
+  return false;
+}
+
+/* Older trackers held tasks, questions, photos and a verify step. Keep the
+   jobs and the dates that matter; quietly drop the rest. */
+function upgrade(st){
+  if(!st || !Array.isArray(st.jobs)) return null;
+  if(st.v===2) return st;
+  const out=blankState();
+  out.company=st.company||out.company;
+  out.seq=st.seq||1;
+  out.settings=Object.assign(out.settings,{
+    currency:(st.settings&&st.settings.currency)||'£',
+    inspectionDays:(st.settings&&st.settings.inspectionDays)||7,
+    inspections:true,
+    colour:(st.settings&&st.settings.accent)||'#1d4667',
+    yard:(st.settings&&st.settings.yard)||null
+  });
+  out.members=(st.members||[]).map(m=>({id:m.id,name:m.name,role:m.role||'',initials:m.initials||initials(m.name||'?'),active:true}));
+  out.jobs=(st.jobs||[]).map(j=>{
+    const d=j.dates||{};
+    const status = (j.status==='down'||j.status==='complete') ? 'down' : (j.status==='up'||j.status==='offhire') ? 'up' : 'booked';
+    const oldNotes=[j.desc, ...(j.questions||[]).map(q=>'Q: '+q.text+((q.answers||[]).length?' — '+q.answers.map(a=>a.text).join(' / '):''))]
+      .filter(Boolean).join('\n');
+    const job={ id:j.id, ref:j.ref, client:j.client||'', site:j.site||'', contact:j.contact||'', phone:j.phone||'',
+      notes:oldNotes, status, value:j.value||0, hireRate:j.hireRate||0, crew:j.crew||[], location:j.location||null,
+      dates:{erect:d.erect||'', up:d.erected||'', dismantle:d.dismantle||'', down:d.dismantled||''},
+      inspection:{next:'',last:'',by:''}, activity:j.activity||[],
+      createdAt:j.createdAt||nowISO(), updatedAt:j.updatedAt||nowISO() };
+    if(status==='up' && job.dates.up) job.inspection.next=plus(job.dates.up, out.settings.inspectionDays);
+    return job;
+  });
+  return out;
+}
+
+async function initStorage(){
+  const embedded=(()=>{ try{ return JSON.parse(document.getElementById('app-state').textContent); }catch(e){ return null; } })();
+  const localCopy=()=>{ try{ return JSON.parse(localStorage.getItem(LS_KEY)); }catch(e){ return null; } };
+
+  if(window.Backend && Backend.joined()){
+    mode='shared';
+    try{
+      const got=await Backend.load();
+      srvRev=got.rev;
+      S=upgrade(got.state) || blankState();
+      /* Anything this phone entered while it had no signal is still sitting in its own
+         copy. Fold it back in rather than let the server's version quietly win. */
+      const mine=upgrade(localCopy());
+      if(mine && (mine.updatedAt||'') > (S.updatedAt||'')){
+        S=mergeStates(mine,S); dirty=true; queueSave(800);
+      }
+    }catch(e){
+      if(e && e.code==='signed_out'){
+        /* the session finally ran out — keep the jobs, ask them to sign in again */
+        mode='local'; srvRev=null;
+        S=upgrade(localCopy()) || blankState();
+        roMsg='Signed out. Sign in again in Settings to get back to the crew\'s copy.';
+      }else if(e && (e.code==='no_access' || e.code==='no_such_tracker')){
+        /* access was taken away, or the tracker is gone */
+        Backend.leave(); mode='local'; srvRev=null;
+        S=upgrade(localCopy()) || blankState();
+        roMsg='You no longer have access to that tracker. This phone is on its own copy.';
+      }else{
+        /* no signal. Work from this phone's copy; the first successful save reconciles. */
+        S=upgrade(localCopy()) || blankState();
+        srvRev=null; saveState='offline';
+      }
+    }
+  }else{
+    mode='local';
+    S=upgrade(localCopy()) || upgrade(embedded) || blankState();
+  }
+
+  if(!S.tombs) S.tombs={};
+  S.settings=Object.assign(blankState().settings,S.settings||{});
+  try{ me=localStorage.getItem(LS_ME)||null; }catch(e){}
+  if(me&&!member(me)) me=null;
+  applyColour();
+}
+
+function cacheLocal(){
+  try{ localStorage.setItem(LS_KEY,JSON.stringify(S)); localFull=false; }
+  catch(e){ localFull=true; if(mode!=='shared'){ saveState='error'; showSaving(); } }
+}
+function queueSave(ms){
+  clearTimeout(saveTimer); saveTimer=setTimeout(()=>publishNow(),ms==null?2500:ms);
+}
+function save(){
+  S.updatedAt=nowISO();
+  cacheLocal();
+  remindInspections();
+  if(mode!=='shared') return;
+  dirty=true; showSaving(); queueSave();
+}
+/* A save must never land mid-typing: the merge could pull the field out from under
+   the finger that is filling it in. */
+function busyTyping(){
+  const a=document.activeElement;
+  return !!a && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName);
+}
+
+/* Two people, two phones, one document. Merge job by job: whoever touched a
+   job last keeps it, jobs only one of them touched are all kept, and anything
+   deleted stays deleted. */
+function mergeStates(mine, theirs){
+  const tombs=Object.assign({}, theirs.tombs||{}, mine.tombs||{});
+  const jobs={};
+  (theirs.jobs||[]).forEach(j=>{ jobs[j.id]=j; });
+  (mine.jobs||[]).forEach(j=>{
+    const other=jobs[j.id];
+    if(!other || (j.updatedAt||'') >= (other.updatedAt||'')) jobs[j.id]=j;
+  });
+  const people={};
+  (theirs.members||[]).forEach(m=>{ people[m.id]=m; });
+  (mine.members||[]).forEach(m=>{ people[m.id]=m; });
+  const newer = (mine.updatedAt||'') > (theirs.updatedAt||'') ? mine : theirs;
+  return {
+    v:2,
+    company:newer.company,
+    settings:Object.assign({}, theirs.settings, newer.settings),
+    seq:Math.max(mine.seq||1, theirs.seq||1),
+    members:Object.values(people).filter(m=>!tombs[m.id]),
+    jobs:Object.values(jobs).filter(j=>!tombs[j.id])
+      .sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||'')),
+    tombs,
+    updatedAt:nowISO()
+  };
+}
+
+/* Push the current state to the server.
+
+   Unlike the artifact version this does NOT reload the page, so there is no UI state
+   to stash and restore any more — the crew keeps typing straight through a save.
+
+   The write is compare-and-swap on the revision we last saw. If someone else got in
+   first the server hands back what is actually there, we merge it with mergeStates()
+   exactly as before, and try again. */
+async function publishNow(attempt){
+  attempt=attempt||0;
+  if(mode!=='shared') return;
+  if(busyTyping()){ queueSave(1500); return; }
+
+  saveState='saving'; showSaving();
+  try{
+    if(srvRev==null){
+      /* never had a clean read — get one before overwriting anybody */
+      const cur=await Backend.load();
+      srvRev=cur.rev;
+      const theirs=upgrade(cur.state);
+      if(theirs){ S=mergeStates(S,theirs); cacheLocal(); render(); }
+    }
+
+    const res=await Backend.save(S, srvRev);
+    srvRev=res.rev;
+
+    if(res.ok){
+      dirty=false; saveState='saved'; showSaving();
+      remindInspections();
+      return;
+    }
+
+    /* Somebody else saved between our read and our write. */
+    const theirs=upgrade(res.state);
+    if(theirs){ S=mergeStates(S,theirs); cacheLocal(); render(); }
+    if(attempt>=4){
+      saveState='error'; showSaving();
+      toast('Someone else keeps saving at the same time — tap Not saved to try again');
+      return;
+    }
+    return publishNow(attempt+1);
+  }
+  catch(err){
+    const c=err&&err.code;
+    if(c==='offline'){
+      /* Not an error the crew should be nagged about — they are in a cellar or a field.
+         The work is safe on the phone; keep trying quietly. */
+      saveState='offline'; showSaving(); queueSave(8000); return;
+    }
+    if(c==='rate_limited'){ queueSave(4000); return; }
+    if(c==='too_large'){ saveState='error'; showSaving();
+      toast('Too big to save — remove some photos in Settings'); return; }
+    if(c==='no_such_tracker'){
+      mode='local'; srvRev=null; Backend.leave();
+      roMsg='That tracker code no longer works. This phone is on its own copy — rejoin in Settings.';
+      saveState='idle'; render(); return; }
+    if(c==='not_configured'){ mode='local'; saveState='idle'; return; }
+    saveState='error'; showSaving();
+    toast('That did not save. Tap Not saved to try again.');
+  }
+}
+
+/* ---------- keeping up with the other phones ----------------------------------
+   The artifact version got changes because the shell reloaded every open copy. Now
+   nothing tells us, so we ask — but we ask for one number, not the whole document
+   with its photos in it, and only when the app is actually in front of someone. */
+async function pollRemote(force){
+  if(mode!=='shared' || document.hidden) return;
+  if(dirty || saveState==='saving') return;          /* our own save is in flight */
+  if(busyTyping() && !force) return;
+  const now=Date.now();
+  if(!force && now-lastPoll < 9000) return;
+  lastPoll=now;
+  try{
+    const rev=await Backend.rev();
+    if(srvRev!=null && rev===srvRev) return;          /* nothing new */
+    const got=await Backend.load();
+    srvRev=got.rev;
+    const theirs=upgrade(got.state);
+    if(!theirs) return;
+    S=mergeStates(S,theirs); cacheLocal();
+    if(saveState==='offline'){ saveState='idle'; showSaving(); }
+    render(); if(openJob) drawJob();
+    remindInspections();
+  }catch(e){
+    if(e && e.code==='offline' && saveState!=='saving'){ saveState='offline'; showSaving(); }
+  }
+}
+function startPolling(){
+  clearInterval(pollTimer);
+  pollTimer=setInterval(()=>pollRemote(false),10000);
+}
+
+/* Inspection reminders are a native-only trick — no-op in a browser.
+
+   save() runs on every field a man touches, and rescheduling the whole set each time
+   would have the OS cancelling and re-laying dozens of notifications while somebody is
+   still typing an address. Debounced: the reminders only need to be right once the
+   typing stops. */
+let remindTimer=null;
+function remindInspections(){
+  if(!window.Native || !Native.is || !S) return;
+  clearTimeout(remindTimer);
+  remindTimer=setTimeout(()=>{
+    Native.syncInspectionReminders(S.jobs||[], {enabled: !!S.settings.inspections});
+  }, 3000);
+}
+
+const canWrite=()=>mode!=='readonly';
+function guard(){ if(!canWrite()){ toast('You cannot change this tracker'); return false; }
+  if(!me){ pickMe(); return false; } return true; }
+
+/* ---------- views ---------- */
+function render(){
+  document.getElementById('brandName').textContent=S.company||'My Scaffolding Ltd';
+  document.title=S.company||'My Scaffolding Ltd';
+  document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-current',String(b.dataset.view===view)));
+  document.getElementById('whoBtn').textContent = me? mName(me).split(' ')[0] : 'Sign in';
+  document.getElementById('app').innerHTML =
+    (roMsg?`<div class="banner">${esc(roMsg)}</div>`:'') +
+    (localFull? `<div class="banner">This device has run out of room, so nothing is being saved here. Remove some photos in Settings, or export a backup before you close the tab.</div>`:'') +
+    (storagePct()>85? `<div class="banner">Storage is ${storagePct()}% full. Remove a few photos from old jobs before it stops saving.</div>`:'') +
+    ({today:vToday, jobs:vJobs, cal:vCal, docs:vDocs, settings:vSettings}[view]||vToday)();
+  if(openJob && S.jobs.some(j=>j.id===openJob)) drawJob();
+  paintPop();
+}
+
+function jobCard(j){
+  const late=lateReason(j);
+  return `<div class="card job" data-job="${j.id}">
+    <div class="hd">${j.photo?`<img class="thumb" src="${j.thumb||j.photo}" alt="" loading="lazy">`:''}<strong>${esc(j.client||'Untitled job')}</strong>
+      <span class="tag ${isUp(j)?'up':''}">${STATUS[j.status].label}</span></div>
+    <div class="small muted">${esc(j.site||'No address')} · ${j.ref}</div>
+    <div class="line small">
+      ${isUp(j)? `<span class="tag ${onHire(j)?'up':''}">Up ${daysUp(j)} days${j.hireRate?' · '+money(hireEarned(j)):''}${j.dates.offHire?' · off-hired':''}</span>`
+        : j.status==='booked'&&j.dates.erect? `<span class="tag">Up ${fmt(j.dates.erect)} · ${rel(j.dates.erect)}</span>`
+        : j.dates.down? `<span class="tag">Down ${fmt(j.dates.down)}</span>`:''}
+      ${isUp(j)&&j.dates.dismantle? `<span class="tag">Down ${fmt(j.dates.dismantle)}</span>`:''}
+      ${(j.crew||[]).map(avatar).join('')}
+    </div>
+    ${late? `<div class="line"><span class="tag late">${esc(late)}</span></div>`:''}
+  </div>`;
+}
+
+function vToday(){
+  const up=S.jobs.filter(isUp);
+  const late=lateJobs();
+  const soon=jobEvents(todayISO(), plus(todayISO(),14));
+  return `
+  <div class="sec"><h2>Today — ${fmt(todayISO())}</h2><button class="btn sm" data-act="newjob">+ New job</button></div>
+  <div class="stats">
+    <div class="card stat"><div class="n">${up.length}</div><div class="l">Up now</div></div>
+    <div class="card stat"><div class="n">${S.jobs.filter(j=>j.status==='booked').length}</div><div class="l">Booked in</div></div>
+    <div class="card stat"><div class="n">${money(up.reduce((a,j)=>a+hireEarned(j),0))}</div><div class="l">Hire earned</div></div>
+  </div>
+
+  ${late.length?`<div class="sec"><h3>Needs sorting</h3></div>
+  <div class="stack">${late.map(jobCard).join('')}</div>`:''}
+
+  <div class="sec"><h3>Next two weeks</h3></div>
+  <div class="card pad">${soon.length? soon.map(e=>`
+    <div class="person"><span class="tag ${e.kind==='up'?'up':e.kind==='insp'?'late':''}">${e.kind==='up'?'UP':e.kind==='down'?'DOWN':'INSPECT'}</span>
+      <span class="nm"><strong>${esc(e.job.client||e.job.ref)}</strong><br><span class="small muted">${esc(e.job.site||'')}</span></span>
+      <span class="small muted">${fmt(e.date)}<br>${rel(e.date)}</span>
+      <button class="btn sm ghost" data-job="${e.job.id}">Open</button></div>`).join('')
+    : '<div class="empty">Nothing booked in the next two weeks.</div>'}</div>
+
+  <div class="sec"><h3>Scaffolds up</h3></div>
+  <div class="stack">${up.length? up.map(jobCard).join('') : '<div class="card empty">Nothing up at the moment.</div>'}</div>`;
+}
+
+function vJobs(){
+  let list=S.jobs.slice();
+  if(filter.status==='active') list=list.filter(isActive);
+  else if(filter.status!=='all') list=list.filter(j=>j.status===filter.status);
+  if(filter.q){ const q=filter.q.toLowerCase();
+    list=list.filter(j=>[j.client,j.site,j.ref,j.notes,j.contact].join(' ').toLowerCase().includes(q)); }
+  const order={booked:0,up:1,down:2};
+  list.sort((a,b)=>(order[a.status]-order[b.status]) || ((a.dates.erect||'9')<(b.dates.erect||'9')?-1:1));
+  return `<div class="sec"><h2>Jobs</h2><button class="btn sm" data-act="newjob">+ New job</button></div>
+  <div class="chips">
+    ${[['active','Active'],['booked','Booked in'],['up','Up'],['down','Down'],['all','All']]
+      .map(([k,l])=>`<button data-filter="${k}" aria-pressed="${filter.status===k}">${l}</button>`).join('')}
+  </div>
+  <input type="text" id="qbox" placeholder="Search client, address, ref…" value="${esc(filter.q)}" style="margin-bottom:12px">
+  <div class="stack">${list.length? list.map(jobCard).join('') : '<div class="card empty">No jobs here yet.</div>'}</div>`;
+}
+
+function vCal(){
+  const cur=calCursor? new Date(calCursor) : new Date();
+  const y=cur.getFullYear(), m=cur.getMonth();
+  const first=new Date(y,m,1), start=new Date(first); start.setDate(1-((first.getDay()+6)%7));
+  const cells=[]; const d=new Date(start);
+  for(let i=0;i<42;i++){ cells.push(new Date(d)); d.setDate(d.getDate()+1); }
+  const evs=jobEvents(isoOf(cells[0]), isoOf(cells[41]));
+  const byDay={}; evs.forEach(e=>(byDay[e.date]=byDay[e.date]||[]).push(e));
+  return `<div class="sec"><h2>${cur.toLocaleDateString(undefined,{month:'long',year:'numeric'})}</h2>
+    <div class="row"><button class="btn sm ghost" data-cal="-1">‹</button>
+      <button class="btn sm ghost" data-cal="0">Today</button>
+      <button class="btn sm ghost" data-cal="1">›</button></div></div>
+  <div class="cal">
+    ${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(x=>`<div class="dow">${x}</div>`).join('')}
+    ${cells.map(c=>{ const iso=isoOf(c), list=byDay[iso]||[];
+      return `<div class="day ${c.getMonth()!==m?'off':''} ${iso===todayISO()?'today':''}">
+        <div class="dn">${c.getDate()}</div>
+        ${list.slice(0,3).map(e=>`<div class="ev ${e.kind}" data-job="${e.job.id}" title="${esc(e.label)}">${esc(e.label)}</div>`).join('')}
+        ${list.length>3?`<div class="tiny muted">+${list.length-3}</div>`:''}</div>`; }).join('')}
+  </div>
+  <div class="row small muted" style="margin-top:10px;gap:14px;flex-wrap:wrap">
+    <span><span class="tag up">Going up</span></span><span><span class="tag">Coming down</span></span>
+    ${S.settings.inspections?'<span><span class="tag late">Inspection due</span></span>':''}
+  </div>`;
+}
+
+/* Every handover issued, newest first — the folder you reach for when someone asks. */
+function vDocs(){
+  const list=S.jobs.filter(j=>j.handover)
+    .sort((a,b)=>(b.handover.date||'').localeCompare(a.handover.date||''));
+  const q=(filter.q||'').toLowerCase();
+  const shown=q? list.filter(j=>[j.client,j.site,j.ref,j.handover.no,j.handover.clientName].join(' ').toLowerCase().includes(q)) : list;
+  const unsigned=S.jobs.filter(j=>!j.handover && j.dates.up && j.status==='up');
+  return `<div class="sec"><h2>Handovers</h2><span class="tag">${list.length} issued</span></div>
+  <p class="small muted" style="margin:0 0 12px">Each one is the certificate <em>and</em> the record of the inspection before first use. Keep them for at least three months — the law asks for that, and a client asking two months later is the reason.</p>
+  ${list.length>3? `<input type="text" id="qbox" placeholder="Search client, site, certificate…" value="${esc(filter.q)}" style="margin-bottom:12px">`:''}
+  <div class="stack">
+    ${shown.length? shown.map(j=>{
+      const h=j.handover;
+      return `<div class="card job" data-doc="${j.id}">
+        <div class="hd"><strong>${esc(j.client||'Untitled job')}</strong><span class="tag">${esc(h.no||'')}</span></div>
+        <div class="small muted">${esc(j.site||'No address')} · ${j.ref}</div>
+        <div class="line small">
+          <span class="tag">${fmt(h.date)}</span>
+          <span class="tag">${esc((h.load||'').split('—')[0].trim())}</span>
+          ${h.signature? `<span class="tag up">signed by ${esc(h.clientName||'the client')}</span>`
+            : `<span class="tag late">awaiting signature</span>`}
+        </div>
+        <div class="tiny muted">Handed over by ${esc(mName(h.by))}${h.time? ' at '+esc(h.time):''}</div>
+      </div>`; }).join('')
+    : `<div class="card empty">${q? 'Nothing matches that.' : 'No handovers issued yet. Open a job and press Handover.'}</div>`}
+  </div>
+  ${unsigned.length? `<div class="sec"><h3>Up, but never handed over</h3></div>
+    <div class="stack">${unsigned.map(jobCard).join('')}</div>
+    <p class="small muted">A scaffold in use without a handover leaves you carrying the risk. Worth five minutes each.</p>`:''}`;
+}
+
+function vSettings(){
+  const y=S.settings.yard;
+  return `<div class="sec"><h2>Settings</h2></div>
+  <div class="card pad stack">
+    <div><label class="f">Company name</label><input type="text" id="setCompany" value="${esc(S.company||'')}"></div>
+    <div class="f-row">
+      <div><label class="f">Currency</label><input type="text" id="setCur" value="${esc(S.settings.currency)}"></div>
+      <div><label class="f">Inspection every … days</label><input type="number" id="setDays" min="1" max="60" value="${S.settings.inspectionDays}">
+        ${S.settings.inspectionDays>7? `<p class="small" style="color:var(--late);margin:6px 0 0;font-weight:600">Over the legal limit. A scaffold in use must be inspected at least every 7 days.</p>`:''}</div>
+    </div>
+    <div><label class="f">Address and contact <span class="muted" style="text-transform:none">— printed under your name on documents</span></label>
+      <textarea id="setDetails" placeholder="Unit 4, Vale Estate, Dursley GL11 4AB&#10;01453 000000 · office@ridgeway.co.uk">${esc(S.settings.details||'')}</textarea></div>
+    <label class="row small"><input type="checkbox" id="setInsp" ${S.settings.inspections?'checked':''} style="width:auto"> Remind me to inspect scaffolds that are up</label>
+    <div><button class="btn" data-act="savesettings">Save</button></div>
+  </div>
+
+  <div class="sec"><h3>Your logo</h3></div>
+  <div class="card pad stack">
+    <p class="small muted" style="margin:0">It goes on the job sheet and the handover certificate.</p>
+    ${S.settings.logo? `<img src="${S.settings.logo}" alt="" style="max-height:90px;max-width:100%;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px">
+      <div class="row"><button class="btn sm ghost" data-act="logopick">Change</button>
+      <button class="btn sm ghost" data-act="logoclear">Remove</button></div>`
+    : `<div><button class="btn ghost" data-act="logopick">Choose a logo</button></div>`}
+  </div>
+
+  <div class="sec"><h3>The crew</h3><button class="btn sm ghost" data-act="addperson">+ Add someone</button></div>
+  <div class="card pad">
+    ${S.members.length? `<div class="people">${S.members.map(m=>`<div class="person">
+      ${avatar(m.id)}<span class="nm"><strong>${esc(m.name)}</strong>${me===m.id?' <span class="tag">you</span>':''}
+      <br><span class="small muted">${esc(m.role||'')}${m.cisrs?' · CISRS '+esc(m.cisrs):''}</span></span>
+      <button class="btn sm ghost" data-setpin="${m.id}">${m.pinHash?'PIN ✓':'Set PIN'}</button>
+      <button class="btn sm ghost" data-beme="${m.id}">This is me</button>
+      <button class="btn sm ghost" data-rmperson="${m.id}">Remove</button></div>`).join('')}</div>`
+    : '<div class="empty">Nobody added yet.</div>'}
+  </div>
+
+  <div class="sec"><h3>The yard</h3></div>
+  <div class="card pad stack">
+    <p class="small muted" style="margin:0">Pin it once and every job shows how far the site is from the yard.</p>
+    ${y? `<div class="row" style="flex-wrap:wrap">
+        <span class="tag">${y.lat.toFixed(4)}, ${y.lng.toFixed(4)}</span>
+        <a class="btn sm ghost" href="${mapsUrl(y)}" target="_blank" rel="noopener">Open in Maps</a>
+        <button class="btn sm ghost" data-act="yardclear">Clear</button></div>`
+      : `<div class="row" style="flex-wrap:wrap">
+        <button class="btn sm ghost" data-act="yardhere">Use my location</button>
+        <input type="text" id="yardPaste" placeholder="or paste a map link" style="flex:1;min-width:170px">
+        <button class="btn sm ghost" data-act="yardpaste">Set</button></div>`}
+  </div>
+
+  <div class="sec"><h3>Who can see this</h3></div>
+  <div class="card pad stack">
+    ${(()=>{
+      if(!window.Backend || !Backend.configured())
+        return `<p class="small muted" style="margin:0">Sharing is not set up in this build, so this tracker lives on this phone alone.</p>`;
+
+      /* Signed out: nothing else on this panel means anything yet. */
+      if(!Backend.signedIn())
+        return `<p class="small muted" style="margin:0">Sign in and the rest of the crew can be given access by email — everything anyone changes reaches everybody.</p>
+          <div class="row"><button class="btn" data-act="signin">Sign in or create an account</button></div>`;
+
+      /* Signed in but not on a tracker yet. */
+      if(!Backend.joined())
+        return `<p class="small muted" style="margin:0">Signed in as <strong>${esc(Auth.email())}</strong>. Start a shared tracker, or take over one you already run with its old code.</p>
+          <div class="row" style="flex-wrap:wrap">
+            <button class="btn" data-act="trkcreate">Start a shared tracker</button>
+          </div>
+          <div class="row" style="flex-wrap:wrap">
+            <input type="text" id="claimCode" placeholder="old tracker code" autocapitalize="characters" autocorrect="off" spellcheck="false" style="flex:1;min-width:150px">
+            <button class="btn ghost" data-act="trkclaim">Claim it</button>
+          </div>
+          <div class="row"><button class="btn sm ghost" data-act="signout">Sign out</button></div>`;
+
+      const owner = Backend.role()==='owner';
+      const rows = (people||[]).map(pp=>`
+        <div class="row" style="justify-content:space-between;align-items:center;gap:8px">
+          <div style="min-width:0">
+            <div style="overflow:hidden;text-overflow:ellipsis">${esc(pp.email||'—')}${pp.email===Auth.email()?' <span class="small muted">(you)</span>':''}</div>
+            <div class="small muted">${pp.pending?'Invited — not signed up yet':({owner:'Owner',editor:'Can edit',viewer:'View only'}[pp.role]||pp.role)}</div>
+          </div>
+          ${owner && pp.role!=='owner'
+            ? `<button class="btn sm ghost" data-act="revoke" data-email="${esc(pp.email)}">Remove</button>` : ''}
+        </div>`).join('') || `<p class="small muted" style="margin:0">Nobody else yet.</p>`;
+
+      return `<p class="small muted" style="margin:0">Signed in as <strong>${esc(Auth.email())}</strong> — ${owner?'you own this tracker':'you have '+(Backend.canEdit()?'edit':'view-only')+' access'}.</p>
+        <div class="stack" style="gap:10px">${rows}</div>
+        ${owner ? `
+        <div class="row" style="flex-wrap:wrap;align-items:center">
+          <input type="email" id="inviteEmail" placeholder="their email address" autocapitalize="none" autocorrect="off" spellcheck="false" inputmode="email" style="flex:1;min-width:170px">
+          <select id="inviteRole" style="min-width:120px">
+            <option value="editor">Can edit</option>
+            <option value="viewer">View only</option>
+          </select>
+          <button class="btn" data-act="invite">Give access</button>
+        </div>
+        <p class="small muted" style="margin:0">They will not see anything until they sign in with that address.</p>` : ''}
+        <div class="row"><button class="btn sm ghost" data-act="signout">Sign out</button></div>`;
+    })()}
+  </div>
+
+  <div class="sec"><h3>Your data</h3></div>
+  <div class="card pad stack">
+    ${(()=>{const pc=storagePct(), photos=S.jobs.filter(j=>j.photo).length;
+      return `<div>
+        <div class="row" style="justify-content:space-between"><span class="small">Space used — ${(stateBytes()/1048576).toFixed(2)} MB${photos?' · '+photos+' photo'+(photos===1?'':'s'):''}</span>
+        <span class="small muted">${pc}%</span></div>
+        <div style="height:6px;border-radius:3px;background:var(--line);margin-top:6px;overflow:hidden">
+          <div style="height:100%;width:${pc}%;background:${pc>85?'var(--late)':'var(--accent)'}"></div></div>
+        ${pc>70?`<p class="small" style="color:${pc>85?'var(--late)':'var(--ink-2)'};margin:8px 0 0">Photos are what fills it. Removing them from finished jobs frees the most.</p>`:''}
+      </div>`;})()}
+    <p class="small muted" style="margin:0">${mode==='shared'
+      ? 'Shared: everything you change reaches everyone you have given access to, and a copy stays on this phone so it keeps working with no signal.'
+      : 'Kept on this phone only. Export a backup now and then.'}</p>
+    <div class="row" style="flex-wrap:wrap">
+      <button class="btn ghost" data-act="export">Export backup</button>
+      <button class="btn ghost" data-act="import">Import backup</button>
+      <button class="btn ghost" data-act="print">Print</button>
+      <button class="btn danger" data-act="wipe">Erase everything</button>
+    </div>
+  </div>`;
+}
+
+/* ---------- drawer ---------- */
+function openDrawer(title,html){
+  document.getElementById('drawerTitle').textContent=title;
+  document.getElementById('drawerBody').innerHTML=html;
+  document.getElementById('drawer').classList.add('on');
+  document.getElementById('scrim').classList.add('on');
+}
+function closeDrawer(){ openJob=null; pendingYes=null;
+  document.getElementById('drawer').classList.remove('on');
+  document.getElementById('scrim').classList.remove('on'); }
+
+function drawJob(){
+  const j=S.jobs.find(x=>x.id===openJob); if(!j) return closeDrawer();
+  const loc=j.location, dist=(loc&&S.settings.yard)? haversine(S.settings.yard,loc) : null;
+  const insp=inspectionDue(j), showInsp=S.settings.inspections && isUp(j);
+  openDrawer(j.ref+(j.client?' · '+j.client:''), `
+    <div class="stack">
+      ${j.status==='booked'? `<button class="btn big up" data-act="markup" data-jid="${j.id}">Scaffold is UP</button>`:''}
+      ${j.status==='up'? `<button class="btn big" data-act="markdown" data-jid="${j.id}">Scaffold is DOWN</button>`:''}
+      <div class="row" style="flex-wrap:wrap">
+        <button class="btn sm ghost" data-act="dupe" data-jid="${j.id}">Copy for the same client</button>
+        <button class="btn sm ghost" data-act="sheet" data-jid="${j.id}">Job sheet</button>
+        <button class="btn sm ghost" data-act="cert" data-jid="${j.id}">Handover${j.handover?' ✓':''}</button>
+      </div>
+
+      ${j.status==='down'? `<div class="card pad"><strong>Finished.</strong> Up ${fmt(j.dates.up)}, down ${fmt(j.dates.down)} — ${daysUp(j)} days${j.hireRate?', '+money(hireEarned(j))+' hire':''}.
+        <div style="margin-top:10px"><button class="btn sm ghost" data-act="reopen" data-jid="${j.id}">Put it back up</button></div></div>`:''}
+
+      ${showInsp? `<div class="card pad">
+        <div class="row" style="flex-wrap:wrap"><span class="tag ${inspectionLate(j)||(j.inspection&&j.inspection.altered)?'late':''}">${
+          (j.inspection&&j.inspection.altered)? 'Altered '+fmt(j.inspection.altered)+' — inspect before use'
+          : insp? 'Inspection '+(inspectionLate(j)?'was due ':'due ')+fmt(insp) : 'No inspection booked'}</span>
+        <button class="btn sm" data-act="inspected" data-jid="${j.id}">Inspected today</button>
+        <button class="btn sm ghost" data-act="altered" data-jid="${j.id}">Altered today</button></div>
+        ${j.inspection.last?`<p class="tiny muted" style="margin:8px 0 0">Last done ${fmt(j.inspection.last)} by ${esc(mName(j.inspection.by))}</p>`:''}
+      </div>`:''}
+
+      <div class="card pad stack">
+        <div class="f-row">
+          <div><label class="f">Client</label><input type="text" data-fld="client" value="${esc(j.client)}"></div>
+          <div><label class="f">Site address</label><input type="text" data-fld="site" value="${esc(j.site)}">
+            ${j.site? `<a class="btn sm ghost" style="margin-top:6px;display:inline-block" href="${addressUrl(j.site)}" target="_blank" rel="noopener">Look this address up</a>`:''}</div>
+          <div><label class="f">Contact</label><input type="text" data-fld="contact" value="${esc(j.contact)}"></div>
+          <div><label class="f">Phone</label><input type="tel" data-fld="phone" value="${esc(j.phone)}">
+            ${j.phone? `<a class="btn sm ghost" style="margin-top:6px;display:inline-block" href="${telHref(j.phone)}">Call ${esc(j.contact||j.phone)}</a>`:''}</div>
+          <div><label class="f">Price</label><input type="number" data-fld="value" value="${Number(j.value)||0}"></div>
+          <div><label class="f">Hire per week</label><input type="number" data-fld="hireRate" value="${Number(j.hireRate)||0}"></div>
+        </div>
+        <div>
+          <label class="f">Where it is</label>
+          ${loc? `<div class="row" style="flex-wrap:wrap">
+              <span class="tag">${loc.lat.toFixed(4)}, ${loc.lng.toFixed(4)}</span>
+              ${dist!==null?`<span class="tag">${dist<1?Math.round(dist*1000)+' m':dist.toFixed(1)+' km'} from the yard</span>`:''}
+              <a class="btn sm ghost" href="${mapsUrl(loc)}" target="_blank" rel="noopener">Open in Maps</a>
+              <button class="btn sm ghost" data-act="unpin" data-jid="${j.id}">Clear</button></div>
+              <div style="margin-top:10px">${miniMap(j)}</div>`
+            : `<div class="row" style="flex-wrap:wrap">
+              <button class="btn sm ghost" data-act="pinhere" data-jid="${j.id}">Use my location</button>
+              <input type="text" id="locPaste" placeholder="or paste a map link" style="flex:1;min-width:170px">
+              <button class="btn sm ghost" data-act="pinpaste" data-jid="${j.id}">Set</button></div>
+              <p class="tiny muted" style="margin:6px 0 0">Look the address up, then paste the link back here to pin it. Once pinned it works with no signal.</p>`}
+        </div>
+      </div>
+
+      <div class="card pad stack">
+        ${dateField('job','erect','Going up',j.dates.erect)}
+        ${dateField('job','dismantle','Coming down',j.dates.dismantle)}
+        ${dateField('job','up','Went up',j.dates.up)}
+        ${dateField('job','offHire','Off-hired (hire stops)',j.dates.offHire)}
+        ${dateField('job','down','Came down',j.dates.down)}
+        ${j.dates.up?`<p class="small muted" style="margin:10px 0 0">Standing ${daysUp(j)} days${j.hireRate?` · hire ${money(hireEarned(j))} over ${hireDays(j)} days at ${money(j.hireRate)}/week`:''}${j.dates.offHire?` · off-hired ${fmt(j.dates.offHire)}, hire stopped`:''}</p>`:''}
+      </div>
+
+      <div class="card pad">
+        <label class="f">Crew</label>
+        <div class="row" style="flex-wrap:wrap">
+          ${S.members.length? S.members.map(m=>`<label class="tag" style="cursor:pointer;gap:6px">
+            <input type="checkbox" data-crew="${m.id}" ${(j.crew||[]).includes(m.id)?'checked':''} style="width:auto"> ${esc(m.name)}</label>`).join('')
+            : '<span class="small muted">Add the crew in Settings.</span>'}
+        </div>
+      </div>
+
+      <div class="card pad"><label class="f">Notes</label>
+        <textarea data-fld="notes" placeholder="Anything worth remembering about this job…">${esc(j.notes||'')}</textarea></div>
+
+      <div class="card pad"><label class="f">Photo of the site</label>
+        ${j.photo? `<img class="photo-sm" src="${j.photo}" alt="" data-act="viewphoto" data-jid="${j.id}">
+          <div class="row" style="margin-top:8px"><button class="btn sm ghost" data-act="jobphoto" data-jid="${j.id}">Change</button>
+          <button class="btn sm ghost" data-act="jobphotoclear" data-jid="${j.id}">Remove</button></div>`
+        : `<button class="btn ghost" data-act="jobphoto" data-jid="${j.id}">Take or choose a photo</button>`}</div>
+
+      <div class="card pad"><label class="f">History</label>
+        ${(j.activity||[]).length? (j.activity||[]).slice(0,20).map(a=>`<div class="tiny muted" style="padding:3px 0">
+          ${esc(mName(a.by))} ${esc(a.text)} — ${new Date(a.at).toLocaleDateString()}</div>`).join('') : '<span class="small muted">Nothing yet.</span>'}
+      </div>
+
+      <div style="margin-bottom:40px"><button class="btn danger" data-act="deljob" data-jid="${j.id}">Delete this job</button></div>
+    </div>`);
+}
+
+function docView(j,kind){
+  openJob=j.id;
+  const title = kind==='cert'? 'Handover certificate' : 'Job sheet';
+  openDrawer(title, `<div class="stack">
+    <div class="card pad"><p class="small muted" style="margin:0">Save it as a picture, then send it on WhatsApp or attach it to an email.</p></div>
+    <div id="docHolder" class="card pad"><p class="muted small">Drawing…</p></div>
+    <div class="row" style="flex-wrap:wrap">
+      <button class="btn" data-act="docsave" data-jid="${j.id}" data-kind="${kind}">Save as a picture</button>
+      ${kind==='cert'? `<button class="btn ghost" data-act="handover" data-jid="${j.id}">Edit the details</button>`:''}
+      <button class="btn ghost" data-backjob="${j.id}">Back to the job</button>
+    </div></div>`);
+  (kind==='cert'? certCanvas(j) : jobSheetCanvas(j)).then(c=>{
+    const h=document.getElementById('docHolder'); if(!h) return;
+    h.innerHTML=''; const img=new Image(); img.className='doc'; img.src=c.toDataURL('image/png'); h.appendChild(img);
+  });
+}
+
+function handoverForm(j){
+  if(!guard()) return;
+  const h=j.handover||{};
+  openJob=j.id;
+  const now=new Date().toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});
+  openDrawer('Handover — '+j.ref, `<div class="card pad stack">
+    <p class="small muted" style="margin:0">This doubles as the record of inspection before first use, so fill it in properly — it is the paperwork that protects you.</p>
+    <div class="f-row">
+      <div><label class="f">Certificate number</label><input type="text" id="hoNo" value="${esc(h.no||certNo(j))}"></div>
+      <div><label class="f">Time of handover</label><input type="text" id="hoTime" value="${esc(h.time||now)}"></div>
+    </div>
+    <div><label class="f">Who is receiving it (they sign)</label><input type="text" id="hoWho" value="${esc(h.clientName||j.contact||'')}"></div>
+    <div class="f-row">
+      <div><label class="f">Type of scaffold</label><select id="hoType">
+        ${SCAFFOLD_TYPES.map(c=>`<option ${(h.type||SCAFFOLD_TYPES[0])===c?'selected':''}>${c}</option>`).join('')}</select></div>
+      <div><label class="f">Size</label><input type="text" id="hoSize" value="${esc(h.size||'')}" placeholder="e.g. 12m x 3 lifts, 5 bays"></div>
+    </div>
+    <div><label class="f">Duty / loading class</label><select id="hoLoad">
+      ${LOAD_CLASSES.map(c=>`<option ${(h.load||LOAD_CLASSES[2])===c?'selected':''}>${c}</option>`).join('')}</select></div>
+    <div class="f-row">
+      <div><label class="f">Built to</label><select id="hoBasis">
+        ${DESIGN_BASIS.map(c=>`<option ${(h.designBasis||DESIGN_BASIS[0])===c?'selected':''}>${c}</option>`).join('')}</select></div>
+      <div><label class="f">Sheet / design reference</label><input type="text" id="hoRef" value="${esc(h.designRef||'')}" placeholder="e.g. TG20 21/1234"></div>
+    </div>
+    <div><label class="f">Restrictions on use</label><textarea id="hoLimits" placeholder="Ties at 4m centres, no sheeting, gable not included…">${esc(h.limits||'')}</textarea></div>
+    <div><label class="f">Anything found at inspection, and what was done</label>
+      <textarea id="hoRemedy" placeholder="Leave empty if nothing was found">${esc(h.remedy||'')}</textarea></div>
+    <div><label class="f">Client signs here</label>
+      ${h.signature? `<img class="sigshot" src="${h.signature}" alt="">
+        <div class="row" style="margin-top:8px"><button class="btn sm ghost" data-act="sigclear" data-jid="${j.id}">Sign again</button></div>`
+      : `<div class="sigwrap"><canvas id="sigPad"></canvas></div>
+         <div class="row" style="margin-top:8px"><button class="btn sm ghost" data-act="sigwipe">Clear</button>
+         <span class="tiny muted">Sign with a finger on a phone, or the mouse.</span></div>`}
+    </div>
+    <div class="row" style="flex-wrap:wrap">
+      <button class="btn" data-act="hosave" data-jid="${j.id}">Save the handover</button>
+      <button class="btn ghost" data-backjob="${j.id}">Cancel</button></div>
+  </div>`);
+  if(!h.signature) setTimeout(initSigPad,30);
+}
+
+/* a signature pad that works with a finger, a pen or a mouse */
+let sigDrawn=false;
+function initSigPad(){
+  const c=document.getElementById('sigPad'); if(!c) return;
+  const r=c.getBoundingClientRect();
+  c.width=Math.round(r.width*2); c.height=Math.round(r.height*2);
+  const ctx=c.getContext('2d'); ctx.scale(2,2);
+  ctx.lineWidth=2.2; ctx.lineCap='round'; ctx.lineJoin='round'; ctx.strokeStyle='#111';
+  ctx.fillStyle='#fff'; ctx.fillRect(0,0,c.width,c.height);
+  let drawing=false;
+  const pos=e=>{ const b=c.getBoundingClientRect(); return {x:e.clientX-b.left, y:e.clientY-b.top}; };
+  c.addEventListener('pointerdown',e=>{ drawing=true; sigDrawn=true; c.setPointerCapture(e.pointerId);
+    const p=pos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); e.preventDefault(); });
+  c.addEventListener('pointermove',e=>{ if(!drawing) return; const p=pos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); e.preventDefault(); });
+  const stop=()=>{ drawing=false; };
+  c.addEventListener('pointerup',stop); c.addEventListener('pointercancel',stop); c.addEventListener('pointerleave',stop);
+  sigDrawn=false;
+}
+/* The pad is drawn at twice the screen size so it looks sharp; store it small,
+   or every save carries a fat picture around with it. */
+function shrinkSignature(pad){
+  const max=560;
+  const k=Math.min(1, max/pad.width);
+  const c=document.createElement('canvas');
+  c.width=Math.round(pad.width*k); c.height=Math.round(pad.height*k);
+  const x=c.getContext('2d');
+  x.fillStyle='#fff'; x.fillRect(0,0,c.width,c.height);
+  x.drawImage(pad,0,0,c.width,c.height);
+  return c.toDataURL('image/png');
+}
+function wipeSigPad(){ const c=document.getElementById('sigPad'); if(!c) return;
+  const ctx=c.getContext('2d'); ctx.save(); ctx.setTransform(1,0,0,1,0,0);
+  ctx.fillStyle='#fff'; ctx.fillRect(0,0,c.width,c.height); ctx.restore(); sigDrawn=false; }
+
+function formNewJob(fresh){
+  if(!canWrite()) return toast('You cannot change this tracker');
+  if(fresh || !njDraft){ njDraft={client:'',site:'',erect:todayISO(),dismantle:'',value:'',hire:'',notes:'',photo:null}; dpOpen=null; dpCursor=null; }
+  openDrawer('New job',`<div class="card pad stack">
+    <div><label class="f">Client</label><input type="text" id="njClient" data-nj="client" value="${esc(njDraft.client)}" placeholder="e.g. Brookside Builders"></div>
+    <div><label class="f">Site address</label>
+      <input type="text" id="njSite" data-nj="site" value="${esc(njDraft.site)}" placeholder="e.g. 14 Mill Lane, Dursley">
+      ${njDraft.site.trim()
+        ? `<a class="btn sm ghost" style="margin-top:6px;display:inline-block" href="${addressUrl(njDraft.site)}" target="_blank" rel="noopener">Look this address up on the map</a>`
+        : `<p class="tiny muted" style="margin:6px 0 0">Type the address and a look-up link appears.</p>`}</div>
+    ${dateField('nj','erect','Going up',njDraft.erect)}
+    ${dateField('nj','dismantle','Coming down',njDraft.dismantle)}
+    <div class="f-row">
+      <div><label class="f">Price</label><input type="number" id="njValue" data-nj="value" value="${esc(njDraft.value)}" placeholder="0"></div>
+      <div><label class="f">Hire per week</label><input type="number" id="njHire" data-nj="hire" value="${esc(njDraft.hire)}" placeholder="0"></div>
+    </div>
+    <div><label class="f">Notes</label><textarea id="njNotes" data-nj="notes" placeholder="e.g. Rear elevation, 3 lifts">${esc(njDraft.notes)}</textarea></div>
+    <div><label class="f">Photo of the site</label>
+      ${njDraft.photo? `<img class="photo-sm" src="${njDraft.photo}" alt="">
+        <div class="row" style="margin-top:8px"><button class="btn sm ghost" data-act="njphoto">Change</button>
+        <button class="btn sm ghost" data-act="njphotoclear">Remove</button></div>`
+        : `<button class="btn ghost" data-act="njphoto">Take or choose a photo</button>`}</div>
+    <div><button class="btn big" data-act="createjob">Create job</button></div>
+  </div>`);
+}
+/* keep what has been typed so the form can redraw around the calendar */
+function grabDraft(){
+  if(!njDraft) return;
+  document.querySelectorAll('[data-nj]').forEach(el=>{ njDraft[el.dataset.nj]=el.value; });
+}
+function pickMe(){
+  openDrawer('Who are you?',`<p class="small muted">Pick your name so it shows against what you do. Kept on this device.</p>
+    <div class="card pad stack">
+      ${S.members.map(m=>`<button class="btn ghost" data-beme="${m.id}" style="text-align:left">${esc(m.name)}${m.role?' — '+esc(m.role):''}</button>`).join('')}
+      ${canWrite()?`<hr class="sep"><div class="row"><input type="text" id="quickMe" placeholder="Or type your name"><button class="btn" data-act="quickme">Add</button></div>`:''}
+    </div>`);
+}
+
+/* ---------- events ---------- */
+const val=id=>{const e=document.getElementById(id);return e?String(e.value||'').trim():'';};
+
+document.addEventListener('click', async e=>{
+  const pop=document.getElementById('colourPop');
+  if(!e.target.closest('#colourPop') && !e.target.closest('#colourBtn')) pop.classList.remove('on');
+
+  const t=e.target.closest('[data-view],[data-job],[data-act],[data-filter],[data-cal],[data-beme],[data-rmperson],[data-colour],[data-mode],[data-datepick],[data-pickday],[data-dpmove],[data-backjob],[data-doc],[data-setpin]');
+  if(!t) return;
+  const j=t.dataset.jid? S.jobs.find(x=>x.id===t.dataset.jid) : null;
+
+  if(t.dataset.view){ view=t.dataset.view; filter.q=''; closeDrawer(); render(); scrollTo(0,0);
+    if(view==='settings') loadPeople();      /* repaints itself when it lands */
+    return; }
+  if(t.dataset.filter){ filter.status=t.dataset.filter; render(); return; }
+  if(t.dataset.cal!==undefined&&t.dataset.cal!==''){ const n=+t.dataset.cal;
+    const c=n===0? new Date() : (()=>{const d=calCursor?new Date(calCursor):new Date(); d.setDate(1); d.setMonth(d.getMonth()+n); return d;})();
+    calCursor=c.toISOString(); render(); return; }
+  if(t.dataset.colour){ if(!canWrite()) return toast('You cannot change this tracker');
+    S.settings.colour=t.dataset.colour; applyColour(); save(); paintPop(); return; }
+  if(t.dataset.mode){ setTheme(t.dataset.mode); return; }
+  if(t.dataset.beme){ me=t.dataset.beme; try{localStorage.setItem(LS_ME,me);}catch(err){}
+    closeDrawer(); render(); toast('Signed in as '+mName(me)); return; }
+  if(t.dataset.rmperson){ if(!canWrite()) return toast('You cannot change this tracker');
+    const id=t.dataset.rmperson;
+    askFirst('Remove '+esc(mName(id))+'?','They come off every job they are on. What they have already done stays in the history.','Remove them',
+      ()=>{ (S.tombs=S.tombs||{})[id]=nowISO();
+        S.members=S.members.filter(m=>m.id!==id);
+        S.jobs.forEach(x=>x.crew=(x.crew||[]).filter(c=>c!==id));
+        if(me===id){ me=null; try{localStorage.removeItem(LS_ME);}catch(e){} }
+        closeDrawer(); save(); render(); toast('Removed'); });
+    return; }
+  if(t.dataset.backjob){ openJob=t.dataset.backjob; drawJob(); return; }
+  if(t.dataset.datepick){ const key=t.dataset.datepick;
+    if(njDraft && key.startsWith('nj:')) grabDraft();
+    dpOpen = dpOpen===key? null : key;
+    dpCursor=null;
+    if(key.startsWith('nj:')) formNewJob(); else drawJob();
+    return; }
+  if(t.dataset.dpmove){ const n=+t.dataset.dpmove;
+    const base=dpCursor || (dpOpen && (dpOpen.startsWith('nj:')? njDraft[dpOpen.split(':')[1]] : (S.jobs.find(x=>x.id===openJob)||{dates:{}}).dates[dpOpen.split(':')[1]])) || todayISO();
+    const d=new Date(base+'T00:00:00'); d.setDate(1); d.setMonth(d.getMonth()+n); dpCursor=isoOf(d);
+    if(njDraft && dpOpen && dpOpen.startsWith('nj:')){ grabDraft(); formNewJob(); } else drawJob();
+    return; }
+  if(t.dataset.pickday!==undefined && t.dataset.pickday!==null && t.dataset.pickday!==''){
+    const parts=t.dataset.pickday.split(':');
+    if(njDraft && parts[0]==='nj') grabDraft();
+    setPicked(parts[0],parts[1],parts[2]||'');
+    return; }
+  if(t.dataset.setpin){ if(!canWrite()) return toast('You cannot change this tracker'); setPinForm(t.dataset.setpin); return; }
+  if(t.dataset.doc){ const dj=S.jobs.find(x=>x.id===t.dataset.doc); if(dj) docView(dj,'cert'); return; }
+  if(t.dataset.job){ openJob=t.dataset.job; drawJob(); return; }
+
+  const act=t.dataset.act;
+  if(act==='newjob') return formNewJob(true);
+  if(act==='njphoto'){ grabDraft(); if(!roomForPhoto()) return;
+    pickPhoto((url,thumb)=>{ njDraft.photo=url; njDraft.thumb=thumb; formNewJob(); toast('Photo added'); }); return; }
+  if(act==='njphotoclear'){ grabDraft(); njDraft.photo=null; formNewJob(); return; }
+
+  if(act==='createjob'){
+    if(!canWrite()) return toast('You cannot change this tracker');
+    grabDraft();
+    const j2=newJob({client:njDraft.client.trim(), site:njDraft.site.trim(), notes:njDraft.notes,
+      value:+njDraft.value||0, hireRate:+njDraft.hire||0, photo:njDraft.photo||null, thumb:njDraft.thumb||null,
+      dates:{erect:njDraft.erect||'', up:'', dismantle:njDraft.dismantle||'', down:''}});
+    njDraft=null; dpOpen=null;
+    openJob=j2.id; render(); drawJob(); toast('Job created'); return;
+  }
+  if(act==='markup'&&j) return markUp(j);
+  if(act==='markdown'&&j) return markDown(j);
+  if(act==='inspected'&&j) return markInspected(j);
+  if(act==='altered'&&j) return markAltered(j);
+  if(act==='reopen'&&j){ if(!guard())return; j.status='up'; j.dates.down='';
+    if(S.settings.inspections) j.inspection={next:plus(todayISO(),Number(S.settings.inspectionDays)||7),last:j.inspection.last,by:j.inspection.by};
+    log(j,'put the scaffold back up'); save(); render(); drawJob(); return; }
+  if(act==='dupe'&&j) return duplicateJob(j);
+  if(act==='sheet'&&j) return docView(j,'sheet');
+  if(act==='cert'&&j){ if(j.handover) return docView(j,'cert'); return handoverForm(j); }
+  if(act==='handover'&&j) return handoverForm(j);
+  if(act==='sigwipe'){ wipeSigPad(); return; }
+  if(act==='sigclear'&&j){ if(!guard())return; j.handover=Object.assign({},j.handover,{signature:''}); save(); handoverForm(j); return; }
+  if(act==='hosave'&&j){
+    if(!guard()) return;
+    const pad=document.getElementById('sigPad');
+    let sig=(j.handover&&j.handover.signature)||'';
+    if(pad && sigDrawn) sig=shrinkSignature(pad);
+
+    const draft={no:val('hoNo')||certNo(j), clientName:val('hoWho'), load:val('hoLoad'),
+      type:val('hoType'), size:val('hoSize'), designBasis:val('hoBasis'), designRef:val('hoRef'),
+      limits:val('hoLimits'), remedy:val('hoRemedy'), time:val('hoTime'),
+      signature:sig, by:me, date:todayISO()};
+    askPin(()=>{
+      j.handover=draft;
+      log(j, sig? 'handed the scaffold over to '+(draft.clientName||'the client')
+               : 'issued the handover to '+(draft.clientName||'the client')+' — signature still to come');
+      save(); render(); docView(j,'cert');
+      toast(sig? 'Handover saved' : 'Saved, waiting for a signature');
+    });
+    return;
+  }
+  if(act==='docsave'&&j){
+    const kind=t.dataset.kind;
+    const c=await (kind==='cert'? certCanvas(j) : jobSheetCanvas(j));
+    await saveCanvas(c, (kind==='cert'? 'handover-':'job-sheet-')+j.ref+'.png');
+    return;
+  }
+  if(act==='jobphoto'&&j){ if(!guard())return;
+    if(!roomForPhoto()) return;
+    pickPhoto((url,thumb)=>{ j.photo=url; j.thumb=thumb; log(j,'added a photo of the site');
+      save(); render(); drawJob(); toast('Photo added'); }); return; }
+  if(act==='jobphotoclear'&&j){ if(!guard())return;
+    askFirst('Remove the photo?','The picture of this site goes. Nothing else changes.','Remove it',
+      ()=>{ j.photo=null; j.thumb=null; log(j,'removed the site photo'); save(); openJob=j.id; render(); drawJob(); }); return; }
+  if(act==='viewphoto'&&j&&j.photo){ openJob=j.id;
+    openDrawer('Site photo', `<img class="photo" src="${j.photo}" alt="">
+      <div class="row" style="margin-top:12px"><button class="btn ghost" data-backjob="${j.id}">Back to the job</button></div>`);
+    return; }
+  if(act==='deljob'&&j) return deleteJob(j);
+  if(act==='pinhere'&&j){ if(!guard())return;
+    pinHere(loc=>{ j.location=loc; log(j,'pinned where the job is'); save(); render(); drawJob(); toast('Location pinned'); }); return; }
+  if(act==='pinpaste'&&j){ if(!guard())return;
+    const loc=parseLocation(val('locPaste'));
+    if(!loc) return toast('That was not a map link or a pair of coordinates');
+    j.location=loc; log(j,'set where the job is'); save(); render(); drawJob(); return; }
+  if(act==='unpin'&&j){ if(!guard())return; j.location=null; log(j,'cleared the location'); save(); render(); drawJob(); return; }
+  if(act==='logopick'){ if(!canWrite()) return toast('You cannot change this tracker');
+    pickLogo(url=>{ S.settings.logo=url; save(); render(); toast('Logo added'); }); return; }
+  if(act==='logoclear'){ if(!canWrite()) return toast('You cannot change this tracker');
+    S.settings.logo=null; save(); render(); return; }
+  if(act==='yardhere'){ if(!canWrite()) return toast('You cannot change this tracker');
+    pinHere(loc=>{ S.settings.yard=loc; save(); render(); toast('Yard pinned'); }); return; }
+  if(act==='yardpaste'){ if(!canWrite()) return toast('You cannot change this tracker');
+    const loc=parseLocation(val('yardPaste')); if(!loc) return toast('That was not a map link or coordinates');
+    S.settings.yard=loc; save(); render(); return; }
+  if(act==='yardclear'){ if(!canWrite()) return toast('You cannot change this tracker'); S.settings.yard=null; save(); render(); return; }
+  if(act==='pinok'){
+    const m=member(me), entered=val('pinBox');
+    if(!m) return;
+    if(pinHash(entered)!==m.pinHash){ toast('That PIN is not right'); return; }
+    const cb=pinFor&&pinFor.cb; pinFor=null; if(cb) cb();
+    return; }
+  if(act==='pincancel'){ pinFor=null; if(openJob) drawJob(); else closeDrawer(); return; }
+  if(act==='savepin'){
+    if(!canWrite()) return toast('You cannot change this tracker');
+    const m=member(t.dataset.mid), pin=val('newPin');
+    if(!m) return;
+    if(!/^\d{4}$/.test(pin)) return toast('Four digits, please');
+    m.pinHash=pinHash(pin); save(); view='settings'; closeDrawer(); render(); toast('PIN set for '+m.name);
+    return; }
+  if(act==='clearpin'){
+    if(!canWrite()) return toast('You cannot change this tracker');
+    const m=member(t.dataset.mid); if(m){ m.pinHash=''; save(); }
+    view='settings'; closeDrawer(); render(); toast('PIN removed');
+    return; }
+  if(act==='addperson'){ if(!canWrite()) return toast('You cannot change this tracker');
+    openDrawer('Add someone',`<div class="card pad stack">
+      <div><label class="f">Name</label><input type="text" id="pName"></div>
+      <div><label class="f">Job</label><select id="pRole">${['Manager','Chargehand','Scaffolder','Labourer','Driver','Office'].map(r=>`<option>${r}</option>`).join('')}</select></div>
+      <div><label class="f">CISRS card number <span class="muted" style="text-transform:none">— printed on handover certificates</span></label>
+        <input type="text" id="pCard" placeholder="optional"></div>
+      <div><label class="f">PIN <span class="muted" style="text-transform:none">— four digits, asked for when they sign something off</span></label>
+        <input type="tel" id="pPin" inputmode="numeric" maxlength="4" placeholder="optional"></div>
+      <div><button class="btn" data-act="saveperson">Add</button></div></div>`); return; }
+  if(act==='saveperson'){ if(!canWrite()) return toast('You cannot change this tracker');
+    const n=val('pName'); if(!n) return toast('Give them a name');
+    const nm=addMember(n,val('pRole'),val('pCard'));
+    const pin=val('pPin'); if(/^\d{4}$/.test(pin)){ nm.pinHash=pinHash(pin); save(); }
+    closeDrawer(); render(); return; }
+  if(act==='quickme'){ const n=val('quickMe'); if(!n) return;
+    const m=addMember(n,'Scaffolder'); me=m.id; try{localStorage.setItem(LS_ME,me);}catch(err){}
+    closeDrawer(); render(); return; }
+  if(act==='savesettings'){ if(!canWrite()) return toast('You cannot change this tracker');
+    S.company=val('setCompany'); S.settings.currency=val('setCur')||'£';
+    const wanted=+val('setDays')||7;
+    S.settings.inspectionDays=wanted;
+    if(wanted>7) toast('Careful — the law says 7 days maximum while it is in use');
+    S.settings.details=val('setDetails');
+    S.settings.inspections=document.getElementById('setInsp').checked;
+    reseedInspections();
+    save(); render(); toast('Saved'); return; }
+  /* ---- accounts ---- */
+  if(act==='signin'){ openAuth('in'); return; }
+  if(act==='toup')  { openAuth('up'); return; }
+  if(act==='toin')  { openAuth('in'); return; }
+
+  if(act==='dosignin' || act==='dosignup'){
+    const email=val('auEmail'), pass=(document.getElementById('auPass')||{}).value||'';
+    if(!email || !pass) return authMsg('Fill both boxes in', true);
+    authMsg(act==='dosignup'?'Creating it…':'Signing in…');
+    try{
+      if(act==='dosignup'){
+        const r=await Auth.signUp(email, pass);
+        rememberEmail(email);
+        if(r.confirmNeeded){
+          authMsg('');
+          openDrawer('Check your email', `<div class="card pad stack">
+            <p style="margin:0">We have sent a message to <strong>${esc(email)}</strong>. Open it and confirm the address, then come back and sign in.</p>
+            <div class="row"><button class="btn" data-act="toin">Back to sign in</button></div></div>`);
+          return;
+        }
+      } else {
+        await Auth.signIn(email, pass);
+        rememberEmail(email);
+      }
+      await afterSignIn();
+    }catch(err){
+      authMsg(err && err.message ? err.message : 'That did not work', true);
+    }
+    return;
+  }
+
+  if(act==='doreset'){
+    const email=val('auEmail');
+    if(!email) return authMsg('Put your email in first', true);
+    try{ await Auth.sendReset(email); authMsg('Sent — check your email for the link'); }
+    catch(err){ authMsg(err && err.message || 'Could not send it', true); }
+    return;
+  }
+
+  if(act==='signout'){
+    askFirst('Sign out?',
+      'This phone keeps its own copy of the jobs, but stops syncing with the crew until you sign in again.',
+      'Sign out',
+      async ()=>{ await Auth.signOut(); Backend.leave(); mode='local'; srvRev=null;
+        clearInterval(pollTimer); people=[]; peopleFor=null; saveState='idle';
+        closeDrawer(); render(); toast('Signed out'); });
+    return;
+  }
+
+  /* ---- the crew's shared copy ---- */
+  if(act==='trkcreate'){
+    if(!Backend.configured()) return toast('Sharing is not set up in this build');
+    if(!Backend.signedIn())   return openAuth('in');
+    toast('Starting it up…');
+    try{
+      await Backend.create(S.company||'');
+      mode='shared'; srvRev=0; dirty=true;
+      await publishNow();                       /* push what is already on this phone */
+      await loadPeople(true); startPolling(); render();
+      toast('Shared tracker started — give the crew access below');
+    }catch(e){
+      if(e && e.code==='signed_out'){ openAuth('in'); return; }
+      toast(e && e.code==='offline' ? 'No signal — try again when you have one' : 'Could not start it. Try again.');
+    }
+    return;
+  }
+
+  /* Takes over a tracker made by the old code-only version. */
+  if(act==='trkclaim'){
+    const code=val('claimCode');
+    if(!code) return toast('Type the old code first');
+    if(!Backend.signedIn()) return openAuth('in');
+    toast('Looking for it…');
+    try{
+      await Backend.claim(code);
+      const got=await Backend.load();
+      srvRev=got.rev; mode='shared';
+      const theirs=upgrade(got.state);
+      const hadOwn=(S.jobs||[]).length>0;
+      S = theirs ? mergeStates(S, theirs) : S;
+      cacheLocal(); await loadPeople(true); startPolling(); render(); remindInspections();
+      if(hadOwn){ dirty=true; queueSave(300); }
+      toast('Claimed — it is yours now');
+    }catch(e){
+      if(e && e.code==='no_such_tracker')  return toast('No tracker with that code');
+      if(e && e.code==='already_claimed')  return toast('Somebody has already claimed that one');
+      if(e && e.code==='signed_out')       return openAuth('in');
+      toast(e && e.code==='offline' ? 'No signal — try again when you have one' : 'Could not claim it');
+    }
+    return;
+  }
+
+  if(act==='picktracker'){
+    Backend.select(t.dataset.id, t.dataset.role);
+    closeDrawer();
+    await adoptTracker();
+    return;
+  }
+
+  if(act==='invite'){
+    const email=val('inviteEmail');
+    const roleEl=document.getElementById('inviteRole');
+    const role=(roleEl && roleEl.value) || 'editor';
+    if(!email) return toast('Put their email in first');
+    try{
+      const r=await Backend.invite(email, role);
+      await loadPeople(true);
+      toast(r.pending ? 'Invited — they get in when they sign up with that email'
+                      : 'Added — they can see it now');
+    }catch(e){
+      if(e && e.code==='bad_email')  return toast('That does not look like an email address');
+      if(e && e.code==='owner_only') return toast('Only the owner can give access');
+      if(e && e.code==='signed_out') return openAuth('in');
+      toast(e && e.code==='offline' ? 'No signal — try again when you have one' : 'Could not add them');
+    }
+    return;
+  }
+
+  if(act==='revoke'){
+    const email=t.dataset.email||'';
+    if(!email) return;
+    askFirst('Remove access?',
+      '<strong>'+esc(email)+'</strong> will not be able to see this tracker any more. Anything they already entered stays.',
+      'Remove them',
+      async ()=>{
+        try{ await Backend.revoke(email); await loadPeople(true); render(); toast('Removed'); }
+        catch(err){ toast(err && err.code==='owner_only' ? 'Only the owner can do that' : 'Could not remove them'); }
+      });
+    return;
+  }
+
+  if(act==='closedrawer'){ closeDrawer(); return; }
+
+  if(act==='export') return exportBackup();
+  if(act==='import'){
+    openDrawer('Import backup',`<p class="small muted">Pick a backup file or paste one in. This replaces everything here.</p>
+      <div class="card pad stack"><input type="file" id="impFile" accept=".json,application/json">
+      <textarea id="impText" placeholder="…or paste the backup" style="min-height:160px"></textarea>
+      <div><button class="btn" data-act="doimport">Replace my data</button></div></div>`);
+    document.getElementById('impFile').onchange=function(){ const f=this.files[0]; if(!f) return;
+      const r=new FileReader(); r.onload=()=>{ document.getElementById('impText').value=r.result; toast('Loaded — press Replace'); }; r.readAsText(f); };
+    return; }
+  if(act==='doimport'){ if(!canWrite()) return toast('You cannot change this tracker');
+    let incoming=null;
+    try{ incoming=upgrade(JSON.parse(val('impText'))); }catch(err){}
+    if(!incoming) return toast('That was not a tracker backup');
+    askFirst('Replace everything?',
+      'This throws away what is in the tracker now — <strong>'+S.jobs.length+' job'+(S.jobs.length===1?'':'s')+
+      '</strong> and <strong>'+S.members.length+' '+(S.members.length===1?'person':'people')+
+      '</strong> — and puts back <strong>'+incoming.jobs.length+' job'+(incoming.jobs.length===1?'':'s')+
+      '</strong> from the backup. There is no undo.',
+      'Replace it all',
+      ()=>{ S=incoming; S.settings=Object.assign(blankState().settings,S.settings||{});
+        applyColour(); save(); closeDrawer(); render(); toast('Imported'); });
+    return; }
+  if(act==='print'){ window.print(); return; }
+  if(act==='wipe'){ if(!canWrite()) return toast('You cannot change this tracker');
+    askFirst('Erase everything?','Every job and every person goes. Export a backup first if there is any chance you want this back.','Erase it all',
+      ()=>{ S=blankState(); me=null; applyColour(); save(); closeDrawer(); render(); toast('Erased'); });
+    return; }
+  if(act==='yes'){ const fn=pendingYes; pendingYes=null; if(fn) fn(); return; }
+  if(act==='no'){ pendingYes=null; if(openJob) drawJob(); else closeDrawer(); return; }
+});
+
+async function exportBackup(){
+  const name='scaffold-tracker-'+todayISO()+'.json', text=JSON.stringify(S,null,2);
+  if(window.Native && Native.is){
+    try{ await Native.saveFile({filename:name, data:text, mime:'application/json', title:'Backup'}); return; }
+    catch(err){
+      if(err && /cancel/i.test(err.message||'')) return;
+      toast('Could not save the backup — try again'); return;
+    }
+  }
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([text],{type:'application/json'}));
+  a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),4000); toast('Backup downloaded');
+}
+
+document.addEventListener('change', e=>{
+  const t=e.target;
+  if(t.dataset.nj){ grabDraft(); if(t.dataset.nj==='site') formNewJob(); return; }
+  if(t.id==='colourPick'){ if(!canWrite()) return toast('You cannot change this tracker');
+    S.settings.colour=t.value; applyColour(); save(); paintPop(); return; }
+  const j=openJob? S.jobs.find(x=>x.id===openJob):null; if(!j) return;
+  if(t.dataset.fld){ if(!guard())return; j[t.dataset.fld]=t.type==='number'? (+t.value||0) : t.value; j.updatedAt=nowISO(); save(); return; }
+  if(t.dataset.date){ if(!guard())return;
+    j.dates[t.dataset.date]=t.value;
+    if(t.dataset.date==='up'){ if(t.value){ j.status='up';
+        if(S.settings.inspections) j.inspection={next:plus(t.value,Number(S.settings.inspectionDays)||7),last:j.inspection.last,by:j.inspection.by}; }
+      else if(j.status==='up') j.status='booked'; }
+    if(t.dataset.date==='down'&&t.value){ j.status='down'; j.inspection={next:'',last:j.inspection.last,by:j.inspection.by}; }
+    log(j,'changed a date'); save(); render(); drawJob(); return; }
+  if(t.dataset.crew){ if(!guard())return; const id=t.dataset.crew;
+    j.crew=t.checked? [...new Set([...(j.crew||[]),id])] : (j.crew||[]).filter(c=>c!==id);
+    save(); return; }
+});
+
+let searchTimer=null;
+document.addEventListener('input', e=>{ if(e.target.id==='qbox'){
+  filter.q=e.target.value;
+  clearTimeout(searchTimer);
+  searchTimer=setTimeout(()=>{
+    const p=(document.getElementById('qbox')||{}).selectionStart;
+    render();
+    const b=document.getElementById('qbox');
+    if(b){ b.focus(); if(p!=null) b.setSelectionRange(p,p); }
+  },180);
+} });
+
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeDrawer(); document.getElementById('colourPop').classList.remove('on'); } });
+document.getElementById('drawerClose').onclick=closeDrawer;
+document.getElementById('scrim').onclick=closeDrawer;
+document.getElementById('whoBtn').onclick=pickMe;
+document.getElementById('colourBtn').onclick=()=>{ paintPop(); document.getElementById('colourPop').classList.toggle('on'); };
+document.getElementById('savingChip').onclick=()=>{ if(saveState==='error'){ toast('Trying again…'); publishNow(); } };
+
+function routeHash(){
+  const m=(location.hash||'').match(/job=([A-Za-z0-9_-]+)/); if(!m) return false;
+  const j=S.jobs.find(x=>x.ref===m[1]||x.id===m[1]);
+  if(j){ openJob=j.id; drawJob(); return true; }
+  return false;
+}
+window.addEventListener('hashchange',routeHash);
+
+function showSaving(){
+  const el=document.getElementById('savingChip'); if(!el) return;
+  clearTimeout(el._h);
+  el.className='saving-chip'+(saveState==='error'?' bad':'');
+  if(saveState==='error'){ el.textContent='Not saved — tap to try again'; el.style.opacity='1'; return; }
+  /* No signal is not a failure. Say what is true — it is on the phone and it will go
+     up when there is a bar of signal — and do not colour it red. */
+  if(saveState==='offline'){ el.textContent='No signal — saved on this phone'; el.style.opacity='1'; return; }
+  if(saveState==='saving' || dirty){ el.textContent='Saving…'; el.style.opacity='1'; return; }
+  el.textContent='Saved'; el.style.opacity='1';
+  el._h=setTimeout(()=>{ el.style.opacity='0'; },1400);
+}
+
+/* ---------- hooks the native shell calls back into ------------------------- */
+window.openJobById=function(id){
+  if(!S) return;
+  const j=S.jobs.find(x=>x.id===id); if(!j) return;
+  openJob=j.id; render(); drawJob();
+};
+/* Android back: close what is open before considering leaving the app. */
+window.handleBackPress=function(){
+  if(document.getElementById('drawer').classList.contains('on')){ closeDrawer(); return true; }
+  const pop=document.getElementById('colourPop');
+  if(pop && pop.classList.contains('on')){ pop.classList.remove('on'); return true; }
+  if(view!=='today'){ view='today'; render(); return true; }
+  return false;
+};
+/* Back from the lock screen or another app: check whether anyone else has saved. */
+window.onAppResume=function(){
+  pollRemote(true);
+  if(dirty) queueSave(400);
+};
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden) pollRemote(true); });
+
+(async function(){
+  await initStorage();
+  render();
+  const routed=routeHash();
+  if(!me && S.members.length && !routed) setTimeout(pickMe,400);
+  if(mode==='shared') startPolling();
+  remindInspections();
+  if(window.Native) Native.hideSplash();
+})();
+</script>

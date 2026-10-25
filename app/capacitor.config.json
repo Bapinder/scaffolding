@@ -1,0 +1,18 @@
+{
+  "appId": "com.myscaffoldingltd",
+  "appName": "My Scaffolding Ltd",
+  "webDir": "www",
+  "ios": { "contentInset": "always", "limitsNavigationsToAppBoundDomains": false },
+  "android": { "allowMixedContent": false },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 600,
+      "backgroundColor": "#1d4667",
+      "showSpinner": false
+    },
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_icon",
+      "iconColor": "#1d4667"
+    }
+  }
+}

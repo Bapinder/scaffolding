@@ -1,0 +1,29 @@
+<style>
+html,body{margin:0;padding:0;width:1024px;height:1024px;overflow:hidden}
+</style>
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#24557a"/>
+      <stop offset="1" stop-color="#14314a"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <!-- scaffold bay: two standards, three ledgers, one diagonal brace -->
+  <g stroke="#ffffff" stroke-width="58" stroke-linecap="round" fill="none">
+    <!-- diagonal brace sits behind the frame -->
+    <path d="M296 700 L728 324" stroke="#7fb2dd" stroke-width="46"/>
+    <!-- standards -->
+    <path d="M296 214 L296 810"/>
+    <path d="M728 214 L728 810"/>
+    <!-- ledgers -->
+    <path d="M262 324 L762 324"/>
+    <path d="M262 512 L762 512"/>
+    <path d="M262 700 L762 700"/>
+  </g>
+  <!-- fittings at the node points -->
+  <g fill="#ffd34d">
+    <circle cx="296" cy="324" r="34"/><circle cx="728" cy="324" r="34"/>
+    <circle cx="296" cy="700" r="34"/><circle cx="728" cy="700" r="34"/>
+  </g>
+</svg>

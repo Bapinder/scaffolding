@@ -3,3 +3,24 @@
 live-state-backup.json
 *-state-backup.json
 scaffold-tracker-*.json
+
+# --- the phone apps (app/) ---------------------------------------------------
+app/node_modules/
+app/ios/App/Pods/
+app/ios/App/App/public/
+app/ios/App/Podfile.lock
+app/android/app/src/main/assets/public/
+app/android/build/
+app/android/app/build/
+app/android/.gradle/
+app/android/local.properties
+app/android/app/release/
+app/*.keystore
+app/*.jks
+
+# Your Supabase project URL and key are per-installation, not source.
+# config.js is committed with EMPTY values; keep it that way (see app/README.md).
+app/www/config.local.js
+
+# Upload signing key and its passwords: never commit, the repo is public.
+android-signing-backup/
